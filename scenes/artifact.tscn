@@ -1,0 +1,97 @@
+[gd_scene load_steps=9 format=3 uid="uid://16658hm0qrgm"]
+
+[ext_resource type="Script" path="res://scripts/artifact.gd" id="1_dsnfm"]
+[ext_resource type="Texture2D" uid="uid://ciomihgvqbb3p" path="res://sprites/artifact.png" id="2_s1siy"]
+[ext_resource type="Shader" path="res://shader/shadow.gdshader" id="2_wh1k3"]
+[ext_resource type="PackedScene" uid="uid://b3intptexv4c7" path="res://scenes/draggable.tscn" id="3_3q32j"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_orgxq"]
+font_size = 100
+outline_size = 50
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hyypv"]
+resource_local_to_scene = true
+shader = ExtResource("2_wh1k3")
+shader_parameter/offset = Vector2(100, 100)
+shader_parameter/modulate = Color(0, 0, 0, 0.301961)
+shader_parameter/source_modulate = Color(1, 1, 1, 1)
+shader_parameter/scale = 1.0
+shader_parameter/radius = 10.0
+shader_parameter/only_shadow = false
+shader_parameter/use_dissolve = null
+shader_parameter/dissolve_value = null
+shader_parameter/burn_size = null
+shader_parameter/burn_color = null
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_8s25d"]
+radius = 76.6848
+
+[sub_resource type="LabelSettings" id="LabelSettings_wv04i"]
+font_size = 100
+outline_size = 50
+outline_color = Color(0, 0, 0, 1)
+
+[node name="artifact" type="Node2D"]
+z_index = 10
+scale = Vector2(0.2, 0.2)
+script = ExtResource("1_dsnfm")
+
+[node name="label_parent" type="Node2D" parent="."]
+position = Vector2(0, 300)
+
+[node name="Label" type="Label" parent="label_parent"]
+visible = false
+z_index = 200
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -175.5
+offset_top = -68.5
+offset_right = 175.5
+offset_bottom = 68.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+text = "artifact"
+label_settings = SubResource("LabelSettings_orgxq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 100
+material = SubResource("ShaderMaterial_hyypv")
+texture = ExtResource("2_s1siy")
+
+[node name="draggable" parent="." instance=ExtResource("3_3q32j")]
+collision_layer = 2
+collision_mask = 2
+drag_type = 2
+handle_tooltip = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="draggable"]
+position = Vector2(10, -20)
+scale = Vector2(3, 3)
+shape = SubResource("CircleShape2D_8s25d")
+
+[node name="ColorRect" type="ColorRect" parent="draggable"]
+offset_left = -99.0
+offset_top = -154.0
+offset_right = 107.0
+offset_bottom = 172.0
+tooltip_text = "Card Description"
+mouse_filter = 1
+color = Color(1, 1, 1, 0)
+
+[node name="price_label" type="Label" parent="."]
+offset_left = -305.0
+offset_top = 255.0
+offset_right = 302.0
+offset_bottom = 460.0
+text = "100 UOL"
+label_settings = SubResource("LabelSettings_wv04i")
+horizontal_alignment = 1
+vertical_alignment = 1

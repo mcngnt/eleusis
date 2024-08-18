@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://catahcnlfd8xi"]
+
+[ext_resource type="Texture2D" uid="uid://c5ai7h1u6ichq" path="res://sprites/module.png" id="1_pcxr4"]
+[ext_resource type="Script" path="res://scripts/module.gd" id="1_xrcus"]
+[ext_resource type="PackedScene" uid="uid://b3intptexv4c7" path="res://scenes/draggable.tscn" id="2_e6nef"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ao8x7"]
+size = Vector2(176, 64)
+
+[node name="module" type="Node2D"]
+script = ExtResource("1_xrcus")
+type = null
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2.75, 2)
+texture = ExtResource("1_pcxr4")
+
+[node name="draggable" parent="." instance=ExtResource("2_e6nef")]
+collision_layer = 4
+collision_mask = 4
+drag_type = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="draggable"]
+shape = SubResource("RectangleShape2D_ao8x7")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -88.0
+offset_top = -31.0
+offset_right = 89.0
+offset_bottom = 32.0
+text = "Module"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -88.0
+offset_top = -33.0
+offset_right = 89.0
+offset_bottom = 32.0
+tooltip_text = "Module Description"
+mouse_filter = 1
+color = Color(1, 1, 1, 0)

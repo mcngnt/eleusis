@@ -1,0 +1,76 @@
+[gd_scene load_steps=8 format=3 uid="uid://bi6ogr5dpnpcs"]
+
+[ext_resource type="Script" path="res://scripts/card.gd" id="1_4umdn"]
+[ext_resource type="Shader" path="res://shader/shadow.gdshader" id="2_bflpd"]
+[ext_resource type="Texture2D" uid="uid://d0u4aow6q5i1r" path="res://sprites/card.png" id="2_ygn7d"]
+[ext_resource type="PackedScene" uid="uid://b3intptexv4c7" path="res://scenes/draggable.tscn" id="3_8xf1p"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lhh8d"]
+size = Vector2(949.5, 1279.5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_olot3"]
+font_size = 200
+outline_size = 100
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_341vb"]
+shader = ExtResource("2_bflpd")
+shader_parameter/offset = Vector2(600, 600)
+shader_parameter/modulate = Color(0, 0, 0, 0.372549)
+shader_parameter/source_modulate = Color(1, 1, 1, 1)
+shader_parameter/scale = 0.5
+shader_parameter/radius = 30.0
+shader_parameter/only_shadow = true
+
+[node name="card" type="Node2D"]
+scale = Vector2(0.15, 0.15)
+script = ExtResource("1_4umdn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_ygn7d")
+
+[node name="draggable" parent="." instance=ExtResource("3_8xf1p")]
+drag_type = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="draggable"]
+position = Vector2(35.75, -16.75)
+shape = SubResource("RectangleShape2D_lhh8d")
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -447.0
+offset_top = -655.0
+offset_right = 509.0
+offset_bottom = 636.0
+text = "Spawn a scrap"
+label_settings = SubResource("LabelSettings_olot3")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+z_index = -10
+material = SubResource("ShaderMaterial_341vb")
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("2_ygn7d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+offset_left = -380.0
+offset_top = -627.0
+offset_right = 447.0
+offset_bottom = 600.0
+size_flags_horizontal = 4
+size_flags_vertical = 6
+mouse_filter = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 170
+bbcode_enabled = true
+text = "[center][outline_size=100][outline_color=#000]Summon a [wave amp=100 freq=4][color=#41bef0]scrap[/color]
+
+[/wave]"
+fit_content = true

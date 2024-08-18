@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8nstxoygoyax"]
+
+[ext_resource type="Shader" path="res://shader/upscale.gdshader" id="1_tn84v"]
+[ext_resource type="Texture2D" uid="uid://dlejyc05wipv3" path="res://sprites/test-pixel-art.png" id="2_6ou5e"]
+[ext_resource type="FontFile" uid="uid://l4v32s4eh8u2" path="res://fonts/alagard.ttf" id="3_6y1hd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fuouv"]
+shader = ExtResource("1_tn84v")
+shader_parameter/AA_SCALE = 41.105
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lnibt"]
+shader = ExtResource("1_tn84v")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_2qv4e"]
+font = ExtResource("3_6y1hd")
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
+material = SubResource("ShaderMaterial_fuouv")
+position = Vector2(-715, -274)
+scale = Vector2(50, 50)
+texture = ExtResource("2_6ou5e")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(-21, 0)
+texture = ExtResource("2_6ou5e")
+
+[node name="Label" type="Label" parent="."]
+z_index = 10
+material = SubResource("ShaderMaterial_lnibt")
+offset_right = 40.0
+offset_bottom = 23.0
+text = "eleusis"
+label_settings = SubResource("LabelSettings_2qv4e")

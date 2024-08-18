@@ -1,0 +1,676 @@
+[gd_scene load_steps=60 format=3 uid="uid://b227st38dku6j"]
+
+[ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
+[ext_resource type="Texture2D" uid="uid://b0myg3u4bowmk" path="res://sprites/tank.png" id="2_1jguu"]
+[ext_resource type="Texture2D" uid="uid://cruxky8xy0k13" path="res://sprites/discard_button1.png" id="4_rai5a"]
+[ext_resource type="Texture2D" uid="uid://bdkwmtj4xh8w4" path="res://sprites/discard_button2.png" id="5_1c1ra"]
+[ext_resource type="Texture2D" uid="uid://i181fobfy3ua" path="res://sprites/bg.png" id="5_1rrg5"]
+[ext_resource type="Texture2D" uid="uid://cerug20tnichw" path="res://sprites/stop_button2.png" id="5_y2u3f"]
+[ext_resource type="Texture2D" uid="uid://duw3qntxqlqb0" path="res://sprites/stop_button1.png" id="6_5q5k4"]
+[ext_resource type="PackedScene" uid="uid://bgox2qm8newi0" path="res://scenes/align_zone.tscn" id="7_fnooy"]
+[ext_resource type="Texture2D" uid="uid://fob0sw3lqc33" path="res://sprites/cards/back.png" id="7_l8oqa"]
+[ext_resource type="Script" path="res://scripts/button_logic.gd" id="7_xkse6"]
+[ext_resource type="PackedScene" uid="uid://gex2e2m7kq6n" path="res://scenes/logic.tscn" id="9_ka8u0"]
+[ext_resource type="Shader" path="res://shader/upscale.gdshader" id="10_78bjs"]
+[ext_resource type="FontFile" uid="uid://l4v32s4eh8u2" path="res://fonts/alagard.ttf" id="11_08k7c"]
+[ext_resource type="Texture2D" uid="uid://cdg2kc6rn0nsm" path="res://sprites/next_button2.png" id="12_s23c8"]
+[ext_resource type="Texture2D" uid="uid://dtfkvvw460slb" path="res://sprites/cards/select.png" id="13_4q0n5"]
+[ext_resource type="Texture2D" uid="uid://dax5s47r73lxp" path="res://sprites/next_button1.png" id="13_7c065"]
+[ext_resource type="Texture2D" uid="uid://clamce15ewwk5" path="res://sprites/disabled_button_draw.png" id="13_8ohb0"]
+[ext_resource type="Texture2D" uid="uid://cwybvxi7dmf7" path="res://sprites/cards/none.png" id="13_vsn4v"]
+[ext_resource type="Script" path="res://scripts/discard_button.gd" id="14_x7l65"]
+[ext_resource type="Texture2D" uid="uid://d2ektg5ebvo5n" path="res://sprites/disabled_button_go.png" id="16_boxul"]
+[ext_resource type="Script" path="res://scripts/droplet_manager.gd" id="16_y2x85"]
+[ext_resource type="Texture2D" uid="uid://dthjmfl5jgnds" path="res://sprites/indic.png" id="27_nk6dh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ey4v4"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4a83p"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_y4kbd"]
+font = ExtResource("11_08k7c")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aiy17"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ttb3"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_qvnyb"]
+font = ExtResource("11_08k7c")
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1r8f8"]
+bg_color = Color(0, 0, 0, 0.188235)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ektw6"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oltcq"]
+texture = ExtResource("13_8ohb0")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_en4cj"]
+texture = ExtResource("4_rai5a")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nxc6t"]
+texture = ExtResource("5_1c1ra")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kc0o3"]
+texture = ExtResource("4_rai5a")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6324v"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_huc0g"]
+font = ExtResource("11_08k7c")
+font_size = 48
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ont60"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oxuec"]
+texture = ExtResource("16_boxul")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q457e"]
+texture = ExtResource("6_5q5k4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8kc1d"]
+texture = ExtResource("5_y2u3f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2fdeg"]
+texture = ExtResource("6_5q5k4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4tkof"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_r7vx7"]
+font = ExtResource("11_08k7c")
+font_size = 48
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pkh08"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_cwdah"]
+texture = ExtResource("7_l8oqa")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8834e"]
+texture = ExtResource("7_l8oqa")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6ro7"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tml17"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_47e5l"]
+texture = ExtResource("13_vsn4v")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_62jun"]
+texture = ExtResource("7_l8oqa")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vmuo1"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+shadow_size = 5
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1vkng"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4b1yw"]
+texture = ExtResource("13_7c065")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ekdrh"]
+texture = ExtResource("12_s23c8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wowj7"]
+texture = ExtResource("13_7c065")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_od01p"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_83uir"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k6o78"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tqfok"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[node name="game" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="main" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="water_tank_texrect" type="TextureRect" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3"]
+material = SubResource("ShaderMaterial_ey4v4")
+custom_minimum_size = Vector2(50, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("2_1jguu")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect"]
+visible = false
+material = SubResource("ShaderMaterial_4a83p")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -87.0
+offset_top = -17.0
+offset_right = -52.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(5, 5)
+text = "100 G"
+label_settings = SubResource("LabelSettings_y4kbd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect"]
+material = SubResource("ShaderMaterial_aiy17")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -23.0
+offset_right = -75.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4, 4)
+theme_override_fonts/normal_font = ExtResource("11_08k7c")
+bbcode_enabled = true
+text = "[center][font_size=16]100 [img=20]res://sprites//coin.png[/img]"
+fit_content = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer/Control"]
+material = SubResource("ShaderMaterial_5ttb3")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -176.5
+offset_top = -10.0
+offset_right = -126.5
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(7, 7)
+size_flags_vertical = 3
+text = "XXXXX"
+label_settings = SubResource("LabelSettings_qvnyb")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.54
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 6
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.4
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 10.0
+mouse_filter = 2
+
+[node name="play_card_align" parent="CanvasLayer/main/HBoxContainer2/VBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.6
+theme_override_styles/panel = SubResource("StyleBoxFlat_1r8f8")
+align_type = 5
+is_frozen = true
+max_nb = 7
+margin = 0.4
+is_stack_style = true
+best_items_number = 7
+show_preview = true
+tex_preview = ExtResource("13_4q0n5")
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="draw_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer" node_paths=PackedStringArray("label")]
+material = SubResource("ShaderMaterial_ektw6")
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/disabled = SubResource("StyleBoxTexture_oltcq")
+theme_override_styles/hover = SubResource("StyleBoxTexture_en4cj")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_nxc6t")
+theme_override_styles/normal = SubResource("StyleBoxTexture_kc0o3")
+script = ExtResource("7_xkse6")
+disable_on_score_computing = true
+label = NodePath("Label")
+
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button"]
+material = SubResource("ShaderMaterial_6324v")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -46.5
+offset_right = 20.0
+offset_bottom = 46.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "
+7"
+label_settings = SubResource("LabelSettings_huc0g")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="end_turn_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("label")]
+material = SubResource("ShaderMaterial_ont60")
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 60
+theme_override_styles/disabled = SubResource("StyleBoxTexture_oxuec")
+theme_override_styles/hover = SubResource("StyleBoxTexture_q457e")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_8kc1d")
+theme_override_styles/normal = SubResource("StyleBoxTexture_2fdeg")
+shortcut_feedback = false
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("7_xkse6")
+disable_on_score_computing = true
+label = NodePath("Label")
+
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button"]
+material = SubResource("ShaderMaterial_4tkof")
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "
+7"
+label_settings = SubResource("LabelSettings_r7vx7")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+mouse_filter = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.06
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="draw_deck" type="Button" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer"]
+material = SubResource("ShaderMaterial_pkh08")
+custom_minimum_size = Vector2(162, 220)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_styles/pressed = SubResource("StyleBoxTexture_cwdah")
+theme_override_styles/normal = SubResource("StyleBoxTexture_8834e")
+text = "
+"
+script = ExtResource("7_xkse6")
+
+[node name="cards_align" parent="CanvasLayer/main/HBoxContainer4" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_stretch_ratio = 5.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6ro7")
+align_type = 2
+margin = 0.4
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="discard_deck" type="Button" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer2"]
+material = SubResource("ShaderMaterial_tml17")
+custom_minimum_size = Vector2(162, 220)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_styles/hover = SubResource("StyleBoxTexture_47e5l")
+theme_override_styles/normal = SubResource("StyleBoxTexture_62jun")
+script = ExtResource("14_x7l65")
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+mouse_filter = 2
+
+[node name="shop_box" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/shop_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.8
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.8
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="shop_align" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer3" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vmuo1")
+align_type = 3
+is_frozen = true
+is_paid = true
+max_nb = 3
+margin = 0.3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.03
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="next_button" type="Button" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer2"]
+material = SubResource("ShaderMaterial_1vkng")
+custom_minimum_size = Vector2(300, 150)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_4b1yw")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ekdrh")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wowj7")
+script = ExtResource("7_xkse6")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+z_index = -1000
+material = SubResource("ShaderMaterial_od01p")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_1rrg5")
+
+[node name="deck" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/deck"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+mouse_filter = 2
+
+[node name="full_deck" parent="CanvasLayer/deck" instance=ExtResource("7_fnooy")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_83uir")
+align_type = 4
+is_frozen = true
+is_closed = true
+margin = 0.4
+
+[node name="discard_deck" parent="CanvasLayer/deck" instance=ExtResource("7_fnooy")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_k6o78")
+align_type = 6
+is_frozen = true
+is_closed = true
+margin = 0.4
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/deck"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="Indic" type="Sprite2D" parent="CanvasLayer/deck"]
+material = SubResource("ShaderMaterial_tqfok")
+position = Vector2(388, 437)
+scale = Vector2(3, 3)
+texture = ExtResource("27_nk6dh")
+
+[node name="droplet_manager" type="Node2D" parent="CanvasLayer"]
+script = ExtResource("16_y2x85")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+script = ExtResource("1_suu85")
+
+[node name="logic" parent="." node_paths=PackedStringArray("score_label", "money_label", "shop_box", "draw_deck_align", "discard_deck_align", "scoring_objects", "starting_deck", "draw_deck", "discard_deck", "draw_button", "go_button", "draw_nb_left_label", "card_tape_nb_left_label", "indic") instance=ExtResource("9_ka8u0")]
+z_index = -10
+score_label = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer/Control/Label")
+money_label = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect/RichTextLabel")
+shop_box = NodePath("../CanvasLayer/shop_box")
+draw_deck_align = NodePath("../CanvasLayer/deck/full_deck")
+discard_deck_align = NodePath("../CanvasLayer/deck/discard_deck")
+scoring_objects = [NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer/Control/Label"), NodePath("../CanvasLayer/main/HBoxContainer2/VBoxContainer2/play_card_align")]
+starting_deck = [null, null, null]
+draw_deck = NodePath("../CanvasLayer/main/HBoxContainer4/VBoxContainer/draw_deck")
+discard_deck = NodePath("../CanvasLayer/main/HBoxContainer4/VBoxContainer2/discard_deck")
+draw_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button")
+go_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button")
+draw_nb_left_label = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button/Label")
+card_tape_nb_left_label = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button/Label")
+indic = NodePath("../CanvasLayer/deck/Indic")
+
+[node name="Timer" type="Timer" parent="logic"]
+wait_time = 0.3
+one_shot = true
+
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button" to="logic" method="_on_draw_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button" to="logic" method="_on_end_turn_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer4/VBoxContainer/draw_deck" to="logic" method="_on_draw_deck_button_up"]
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer4/VBoxContainer2/discard_deck" to="logic" method="_on_discard_deck_button_up"]
+[connection signal="button_up" from="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer2/next_button" to="logic" method="_on_next_button_button_up"]
+[connection signal="timeout" from="logic/Timer" to="logic" method="_on_timer_timeout"]

@@ -1,0 +1,476 @@
+[gd_scene load_steps=42 format=3 uid="uid://b227st38dku6j"]
+
+[ext_resource type="PackedScene" uid="uid://trlg8p2lbp8u" path="res://scenes/water_draw.tscn" id="1_5gdjn"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
+[ext_resource type="Texture2D" uid="uid://cruxky8xy0k13" path="res://sprites/discard_button1.png" id="4_rai5a"]
+[ext_resource type="Texture2D" uid="uid://bdkwmtj4xh8w4" path="res://sprites/discard_button2.png" id="5_1c1ra"]
+[ext_resource type="Texture2D" uid="uid://i181fobfy3ua" path="res://sprites/bg.png" id="5_1rrg5"]
+[ext_resource type="Texture2D" uid="uid://cerug20tnichw" path="res://sprites/stop_button2.png" id="5_y2u3f"]
+[ext_resource type="Texture2D" uid="uid://duw3qntxqlqb0" path="res://sprites/stop_button1.png" id="6_5q5k4"]
+[ext_resource type="PackedScene" uid="uid://bgox2qm8newi0" path="res://scenes/align_zone.tscn" id="7_fnooy"]
+[ext_resource type="Texture2D" uid="uid://fob0sw3lqc33" path="res://sprites/cards/back.png" id="7_l8oqa"]
+[ext_resource type="Script" path="res://scripts/button_logic.gd" id="7_xkse6"]
+[ext_resource type="Shader" path="res://shader/shadow.gdshader" id="8_4qy8q"]
+[ext_resource type="PackedScene" uid="uid://gex2e2m7kq6n" path="res://scenes/logic.tscn" id="9_ka8u0"]
+[ext_resource type="Shader" path="res://shader/upscale.gdshader" id="10_78bjs"]
+[ext_resource type="Texture2D" uid="uid://ct27uwsfdql73" path="res://sprites/water_tank.png" id="11_lrr6d"]
+[ext_resource type="Texture2D" uid="uid://cdg2kc6rn0nsm" path="res://sprites/next_button2.png" id="12_s23c8"]
+[ext_resource type="Texture2D" uid="uid://dax5s47r73lxp" path="res://sprites/next_button1.png" id="13_7c065"]
+[ext_resource type="Script" path="res://scripts/droplet_manager.gd" id="16_y2x85"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_y4kbd"]
+font_size = 50
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e48lg"]
+bg_color = Color(0, 0, 0, 0.2)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_qvnyb"]
+font_size = 70
+font_color = Color(0, 0, 0, 0.498039)
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1r8f8"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ektw6"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_en4cj"]
+texture = ExtResource("4_rai5a")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_nxc6t"]
+texture = ExtResource("5_1c1ra")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kc0o3"]
+texture = ExtResource("4_rai5a")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ont60"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_q457e"]
+texture = ExtResource("6_5q5k4")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8kc1d"]
+texture = ExtResource("5_y2u3f")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_2fdeg"]
+texture = ExtResource("6_5q5k4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pkh08"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8834e"]
+texture = ExtResource("7_l8oqa")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s6ro7"]
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tml17"]
+shader = ExtResource("8_4qy8q")
+shader_parameter/offset = Vector2(100, 100)
+shader_parameter/modulate = Color(0, 0, 0, 0.376471)
+shader_parameter/source_modulate = Color(1, 1, 1, 1)
+shader_parameter/scale = 1.0
+shader_parameter/radius = 10.0
+shader_parameter/only_shadow = false
+shader_parameter/use_dissolve = null
+shader_parameter/dissolve_value = null
+shader_parameter/burn_size = null
+shader_parameter/burn_color = null
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_62jun"]
+texture = ExtResource("7_l8oqa")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vmuo1"]
+bg_color = Color(0, 0, 0, 0.2)
+corner_radius_top_left = 30
+corner_radius_top_right = 30
+corner_radius_bottom_right = 30
+corner_radius_bottom_left = 30
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_plpoh"]
+shader = ExtResource("8_4qy8q")
+shader_parameter/offset = Vector2(100, 100)
+shader_parameter/modulate = Color(0, 0, 0, 0.458824)
+shader_parameter/source_modulate = Color(1, 1, 1, 1)
+shader_parameter/scale = 1.0
+shader_parameter/radius = 100.0
+shader_parameter/only_shadow = null
+shader_parameter/use_dissolve = null
+shader_parameter/dissolve_value = null
+shader_parameter/burn_size = null
+shader_parameter/burn_color = null
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4b1yw"]
+texture = ExtResource("13_7c065")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ekdrh"]
+texture = ExtResource("12_s23c8")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_wowj7"]
+texture = ExtResource("13_7c065")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_od01p"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_83uir"]
+bg_color = Color(0, 0, 0, 0.270588)
+
+[node name="game" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="water_draw" parent="CanvasLayer" instance=ExtResource("1_5gdjn")]
+
+[node name="main" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="water_tank_texrect" type="TextureRect" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3"]
+custom_minimum_size = Vector2(100, 250)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("11_lrr6d")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -149.0
+offset_top = -11.5
+offset_right = 149.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "100 UOL"
+label_settings = SubResource("LabelSettings_y4kbd")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="artifacts_align" parent="CanvasLayer/main/HBoxContainer/VBoxContainer" instance=ExtResource("7_fnooy")]
+visible = false
+z_index = 10
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_e48lg")
+align_type = 1
+max_nb = 6
+margin = 0.3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.48
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.4
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer2/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "XXXXX"
+label_settings = SubResource("LabelSettings_qvnyb")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 10.0
+mouse_filter = 2
+
+[node name="play_card_align" parent="CanvasLayer/main/HBoxContainer2/VBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 5.6
+theme_override_styles/panel = SubResource("StyleBoxFlat_1r8f8")
+align_type = 5
+is_frozen = true
+max_nb = 7
+margin = 0.3
+is_stack_style = true
+best_items_number = 7
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="discard_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer"]
+material = SubResource("ShaderMaterial_ektw6")
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/hover = SubResource("StyleBoxTexture_en4cj")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_nxc6t")
+theme_override_styles/normal = SubResource("StyleBoxTexture_kc0o3")
+script = ExtResource("7_xkse6")
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="end_turn_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer2"]
+material = SubResource("ShaderMaterial_ont60")
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = SubResource("StyleBoxTexture_q457e")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_8kc1d")
+theme_override_styles/normal = SubResource("StyleBoxTexture_2fdeg")
+shortcut_feedback = false
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("7_xkse6")
+disable_on_score_computing = true
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/main"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.06
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="draw_deck" type="Button" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer"]
+material = SubResource("ShaderMaterial_pkh08")
+custom_minimum_size = Vector2(94, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_styles/normal = SubResource("StyleBoxTexture_8834e")
+text = "
+"
+script = ExtResource("7_xkse6")
+disable_on_score_computing = true
+
+[node name="cards_align" parent="CanvasLayer/main/HBoxContainer4" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_stretch_ratio = 3.99
+theme_override_styles/panel = SubResource("StyleBoxFlat_s6ro7")
+align_type = 2
+margin = 0.3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="discard_deck" type="Button" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer2"]
+material = SubResource("ShaderMaterial_tml17")
+custom_minimum_size = Vector2(94, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_styles/normal = SubResource("StyleBoxTexture_62jun")
+script = ExtResource("7_xkse6")
+disable_on_score_computing = true
+
+[node name="shop_box" type="HBoxContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/shop_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="shop_align" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer3" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_vmuo1")
+align_type = 3
+is_frozen = true
+is_paid = true
+max_nb = 3
+margin = 0.3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="next_button" type="Button" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer2"]
+material = SubResource("ShaderMaterial_plpoh")
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_styles/hover = SubResource("StyleBoxTexture_4b1yw")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ekdrh")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wowj7")
+script = ExtResource("7_xkse6")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer"]
+z_index = -1000
+material = SubResource("ShaderMaterial_od01p")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("5_1rrg5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="card_bag" parent="CanvasLayer/VBoxContainer" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_83uir")
+align_type = 4
+is_frozen = true
+margin = 0.3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+script = ExtResource("1_suu85")
+
+[node name="logic" parent="." node_paths=PackedStringArray("score_label", "money_label", "shop_box", "scoring_objects") instance=ExtResource("9_ka8u0")]
+z_index = -10
+score_label = NodePath("../CanvasLayer/main/HBoxContainer2/VBoxContainer/Label")
+money_label = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect/Label")
+shop_box = NodePath("../CanvasLayer/shop_box")
+scoring_objects = [NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button"), NodePath("../CanvasLayer/main/HBoxContainer2/VBoxContainer/Label"), NodePath("../CanvasLayer/main/HBoxContainer2/VBoxContainer2/play_card_align"), NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/discard_button")]
+
+[node name="Timer" type="Timer" parent="logic"]
+wait_time = 0.3
+one_shot = true
+
+[node name="droplet_manager" type="Node2D" parent="."]
+script = ExtResource("16_y2x85")
+
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer/discard_button" to="logic" method="_on_discard_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button" to="logic" method="_on_end_turn_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer2/next_button" to="logic" method="_on_next_button_button_up"]
+[connection signal="timeout" from="logic/Timer" to="logic" method="_on_timer_timeout"]

@@ -1,0 +1,85 @@
+[gd_scene load_steps=12 format=3 uid="uid://b6jtspwmwvlas"]
+
+[ext_resource type="Script" path="res://scripts/score_effect.gd" id="1_u2jyp"]
+[ext_resource type="Shader" path="res://shader/upscale.gdshader" id="2_uhrjo"]
+[ext_resource type="FontFile" uid="uid://l4v32s4eh8u2" path="res://fonts/alagard.ttf" id="3_2eqrj"]
+[ext_resource type="Texture2D" uid="uid://dvyixblru65ip" path="res://sprites/rectangle.png" id="4_vwd5n"]
+[ext_resource type="Texture2D" uid="uid://bnje80j4rktue" path="res://sprites/circle.png" id="5_n38ul"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cumna"]
+shader = ExtResource("2_uhrjo")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_87r1a"]
+font = ExtResource("3_2eqrj")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_y37uo"]
+shader = ExtResource("2_uhrjo")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 0.772, 0.28, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_m88rd"]
+shader = ExtResource("2_uhrjo")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 0.35, 0.35, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kf51f"]
+shader = ExtResource("2_uhrjo")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oxkh5"]
+font = ExtResource("3_2eqrj")
+
+[node name="score_effect" type="Node2D"]
+z_index = 50
+scale = Vector2(2, 2)
+script = ExtResource("1_u2jyp")
+
+[node name="bonus_label" type="Label" parent="."]
+material = SubResource("ShaderMaterial_cumna")
+offset_left = -13.5
+offset_top = -11.5
+offset_right = 10.5
+offset_bottom = 11.5
+scale = Vector2(2, 2)
+pivot_offset = Vector2(12, 12)
+text = "+10"
+label_settings = SubResource("LabelSettings_87r1a")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Rectangle" type="Sprite2D" parent="."]
+z_index = -1
+material = SubResource("ShaderMaterial_y37uo")
+position = Vector2(0, 30)
+scale = Vector2(4.3, 2.58)
+texture = ExtResource("4_vwd5n")
+
+[node name="Circle" type="Sprite2D" parent="."]
+z_index = -1
+material = SubResource("ShaderMaterial_m88rd")
+position = Vector2(0, -1)
+scale = Vector2(3, 3)
+texture = ExtResource("5_n38ul")
+
+[node name="effect_label" type="Label" parent="."]
+material = SubResource("ShaderMaterial_kf51f")
+offset_left = -38.5
+offset_top = 22.5
+offset_right = 42.5
+offset_bottom = 37.5
+rotation = 6.28319
+scale = Vector2(1.6, 1.6)
+pivot_offset = Vector2(40, 7)
+size_flags_horizontal = 4
+text = "5 of a kind"
+label_settings = SubResource("LabelSettings_oxkh5")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true

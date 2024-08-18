@@ -1,0 +1,376 @@
+[gd_scene load_steps=16 format=3 uid="uid://b227st38dku6j"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_e0w8l"]
+[ext_resource type="Texture2D" uid="uid://df6nd32211rqr" path="res://sprites/map.png" id="1_hwsyx"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
+[ext_resource type="Script" path="res://scripts/map.gd" id="3_ue8el"]
+[ext_resource type="Script" path="res://scripts/car.gd" id="4_scl3d"]
+[ext_resource type="Texture2D" uid="uid://1t2l8uo1a5fc" path="res://sprites/car.png" id="5_xty63"]
+[ext_resource type="Texture2D" uid="uid://cq1c1koxkny1j" path="res://sprites/dashwave.png" id="6_5cusr"]
+[ext_resource type="PackedScene" uid="uid://bgox2qm8newi0" path="res://scenes/align_zone.tscn" id="7_fnooy"]
+[ext_resource type="PackedScene" uid="uid://gex2e2m7kq6n" path="res://scenes/logic.tscn" id="9_ka8u0"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7oxdy"]
+texture = ExtResource("1_hwsyx")
+texture_region_size = Vector2i(32, 32)
+0:0/next_alternative_id = 8
+0:0/0 = 0
+0:0/1 = 1
+0:0/1/transpose = true
+0:0/2 = 2
+1:0/next_alternative_id = 5
+1:0/0 = 0
+1:0/1 = 1
+1:0/1/flip_v = true
+1:0/2 = 2
+1:0/2/transpose = true
+1:0/3 = 3
+1:0/3/flip_h = true
+1:0/3/transpose = true
+1:0/4 = 4
+2:0/next_alternative_id = 5
+2:0/0 = 0
+2:0/1 = 1
+2:0/1/flip_h = true
+2:0/2 = 2
+2:0/2/flip_v = true
+2:0/2/transpose = true
+2:0/3 = 3
+2:0/3/flip_h = true
+2:0/3/flip_v = true
+2:0/4 = 4
+3:0/next_alternative_id = 2
+3:0/0 = 0
+3:0/1 = 1
+0:1/next_alternative_id = 5
+0:1/0 = 0
+0:1/1 = 1
+0:1/1/flip_v = true
+0:1/2 = 2
+0:1/2/transpose = true
+0:1/3 = 3
+0:1/3/flip_h = true
+0:1/3/transpose = true
+0:1/4 = 4
+1:1/next_alternative_id = 5
+1:1/0 = 0
+1:1/1 = 1
+1:1/1/flip_v = true
+1:1/2 = 2
+1:1/2/transpose = true
+1:1/3 = 3
+1:1/3/flip_h = true
+1:1/3/transpose = true
+1:1/4 = 4
+
+[sub_resource type="TileSet" id="TileSet_vyun6"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_7oxdy")
+
+[sub_resource type="LabelSettings" id="LabelSettings_f37sm"]
+font_size = 30
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thxhw"]
+bg_color = Color(6.73831e-07, 0.71896, 0.352519, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coynx"]
+bg_color = Color(0, 0.564706, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0rkgd"]
+bg_color = Color(0, 0.392157, 0.298039, 1)
+
+[node name="game" type="Node2D"]
+
+[node name="level" type="Node2D" parent="."]
+script = ExtResource("1_e0w8l")
+
+[node name="TileMap" type="TileMap" parent="level"]
+tile_set = SubResource("TileSet_vyun6")
+format = 2
+script = ExtResource("3_ue8el")
+
+[node name="car" type="Node2D" parent="level"]
+script = ExtResource("4_scl3d")
+
+[node name="Sprite2D" type="Sprite2D" parent="level/car"]
+texture = ExtResource("5_xty63")
+
+[node name="Timer" type="Timer" parent="level/car"]
+one_shot = true
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="level/car"]
+emitting = false
+amount = 100
+lifetime = 0.1
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+lifetime_randomness = 1.0
+texture = ExtResource("6_5cusr")
+particle_flag_align_y = true
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 200.0
+initial_velocity_max = 300.0
+damping_max = 25.0
+angle_min = -31.0
+scale_amount_min = 0.25
+scale_amount_max = 0.75
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3, 3)
+script = ExtResource("1_suu85")
+offset_level = Vector2(0, -10)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="dices" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/dices"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/dices"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/dices/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="align_zone" parent="CanvasLayer/dices/HBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+align_type = 2
+margin = 350
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/dices/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/dices"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.06
+mouse_filter = 2
+
+[node name="score_box" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.11
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.6
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer/score_box/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="score_label" type="Label" parent="CanvasLayer/score_box/HBoxContainer/VBoxContainer2/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+text = "Score :  XXXX"
+label_settings = SubResource("LabelSettings_f37sm")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
+mouse_filter = 2
+
+[node name="run_button" type="Button" parent="CanvasLayer/score_box/HBoxContainer/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "RUN"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.15
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="align_zone" parent="CanvasLayer/score_box/HBoxContainer3" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_stretch_ratio = 0.7
+align_type = 3
+margin = 300
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="module_cards_box" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/module_cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/module_cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="align_zone" parent="CanvasLayer/module_cards_box/VBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+align_type = 1
+align_on_x = false
+margin = 600
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/module_cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="shop_align" parent="CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer3" instance=ExtResource("7_fnooy")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+align_type = 5
+margin = 500
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="next_button" type="Button" parent="CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer2"]
+visible = false
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_thxhw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_coynx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0rkgd")
+text = "NEXT"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/module_cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer4"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="module_align" parent="CanvasLayer/module_cards_box/VBoxContainer4" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+align_type = 4
+align_on_x = false
+margin = 700
+is_stack_style = true
+best_items_number = 7
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/module_cards_box/VBoxContainer4"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="CanvasLayer/module_cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+mouse_filter = 2
+
+[node name="logic" parent="." node_paths=PackedStringArray("score_label", "score_box", "shop_align_zone", "level", "next_button") instance=ExtResource("9_ka8u0")]
+score_label = NodePath("../CanvasLayer/score_box/HBoxContainer/VBoxContainer2/PanelContainer/score_label")
+score_box = NodePath("../CanvasLayer/score_box")
+shop_align_zone = NodePath("../CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer3/shop_align")
+level = NodePath("../level")
+next_button = NodePath("../CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer2/next_button")
+
+[connection signal="car_reached_end" from="level/car" to="logic" method="_on_car_car_reached_end"]
+[connection signal="timeout" from="level/car/Timer" to="level/car" method="_on_timer_timeout"]
+[connection signal="button_up" from="CanvasLayer/score_box/HBoxContainer/VBoxContainer3/run_button" to="logic" method="_on_run_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/module_cards_box/VBoxContainer3/HBoxContainer2/next_button" to="logic" method="_on_next_button_button_up"]

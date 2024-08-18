@@ -1,0 +1,187 @@
+[gd_scene load_steps=10 format=3 uid="uid://bfvjlhcj7w156"]
+
+[ext_resource type="Shader" path="res://shader/shadow.gdshader" id="3_pxxn1"]
+
+[sub_resource type="GDScript" id="GDScript_cfo1v"]
+script/source = "extends Node2D
+
+
+
+@onready var animated_sprite_2d = $AnimatedSprite2D
+@onready var shadow = $shadow
+
+var asteroid_pos = Vector2()
+#
+#var rainbow_timer = 0
+#var rainbow_speed = 0.2
+
+var color = logic_globals.WISP_COLOR.RED
+var weight = logic_globals.WISP_WEIGHT.NORMAL
+
+var mod_color = Color.WHITE
+
+var keep = false
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	match weight:
+		logic_globals.WISP_WEIGHT.LIGHTWEIGHT:
+			animated_sprite_2d.scale = Vector2(0.5, 0.5)
+			shadow.scale = Vector2(0.5, 0.5)
+		logic_globals.WISP_WEIGHT.HEAVY:
+			animated_sprite_2d.scale = Vector2(1.75,1.75)
+			shadow.scale = Vector2(1.75,1.75)
+		_:
+			pass
+	animated_sprite_2d.material.set_shader_parameter(\"draw_grad\", color == logic_globals.WISP_COLOR.BICHROMATIC)
+	if color != logic_globals.WISP_COLOR.BICHROMATIC:
+		mod_color = logic_globals.WISP_SCREEN_COLOR[color]
+		animated_sprite_2d.modulate = mod_color
+	else:
+		animated_sprite_2d.material.set_shader_parameter(\"color1\", logic_globals.WISP_SCREEN_COLOR[0])
+		animated_sprite_2d.material.set_shader_parameter(\"color2\", logic_globals.WISP_SCREEN_COLOR[1])
+
+func _process(delta):
+	pass
+
+func activate_tween(bonus):
+	var tween = get_tree().create_tween()
+	tween.tween_property(animated_sprite_2d, \"scale\", animated_sprite_2d.scale*2, 0.1).set_trans(Tween.TRANS_EXPO)
+	tween.chain().tween_property(animated_sprite_2d, \"scale\", animated_sprite_2d.scale, 0.1).set_trans(Tween.TRANS_EXPO)
+	if !bonus:
+		tween.parallel().tween_property(animated_sprite_2d, \"modulate\", Color.BLUE, .1).set_trans(Tween.TRANS_EXPO)
+		tween.tween_property(animated_sprite_2d, \"modulate\", mod_color, .1).set_trans(Tween.TRANS_EXPO)
+	return tween
+
+func score_tween():
+	var tween = get_tree().create_tween()
+	z_index = -10
+	tween.tween_property(self, \"position\", asteroid_pos, 0.3).set_trans(Tween.TRANS_EXPO)
+	return tween
+
+func sample_randomly():
+	color = logic_globals.WISP_COLOR.values()[randi() % logic_globals.WISP_COLOR.size()]
+
+func compute_score(score):
+	match weight:
+		logic_globals.WISP_WEIGHT.LIGHTWEIGHT:
+			return 0.1 * score
+		logic_globals.WISP_WEIGHT.HEAVY:
+			var mult = 1.
+			for wisp in logic_globals.wisps:
+				if wisp != self:
+					mult += 0.1
+			return mult * score
+		_:
+			return score
+"
+
+[sub_resource type="Shader" id="Shader_n8uou"]
+code = "//// HSV to RBG from https://www.rapidtables.com/convert/color/hsv-to-rgb.html
+//// Rotation matrix from https://en.wikipedia.org/wiki/Rotation_matrix
+//
+//shader_type canvas_item;
+//
+//
+//const float strengt = 0.5;
+//const float speed = 0.5;
+//
+//uniform bool draw_grad;
+//
+//uniform vec4 color1 : source_color;
+//uniform vec4 color2 : source_color;
+//
+//void fragment() {
+	//
+	//if(draw_grad){
+		//float angle = mod(TIME * .1, 2. * PI);
+		//float hue = UV.x * cos((angle)) - UV.y * sin((angle));
+		//hue = fract(hue + fract(TIME  * speed));
+		//float x = 1. - abs(mod(hue / (1./ 6.), 3.) - 1.);
+	//
+//
+		//vec4 grad = mix(color1, color2, x);
+		//vec4 color = texture(TEXTURE, UV);
+		//COLOR = color * grad;
+	//}
+	//
+//}
+
+shader_type canvas_item;
+
+uniform vec4 color1: source_color;
+uniform vec4 color2: source_color;
+
+uniform bool draw_grad;
+
+void fragment(){
+	if(draw_grad){
+		float t = mix(mix(UV.y, UV.x + 0.3, sin(TIME * 10.) * 0.5 + 0.5), sin(TIME * 10.) * 0.5 + 0.5, 0.3);
+		COLOR = mix(color1, color2, t) * COLOR;
+		COLOR.a = texture(TEXTURE,UV).a;
+	}
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f368b"]
+resource_local_to_scene = true
+shader = SubResource("Shader_n8uou")
+shader_parameter/color1 = Color(1, 1, 0, 1)
+shader_parameter/color2 = Color(1, 0, 0, 1)
+shader_parameter/draw_grad = true
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6bcn4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_enyor"]
+atlas = SubResource("CompressedTexture2D_6bcn4")
+region = Rect2(0, 0, 2000, 2000)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1u8r1"]
+atlas = SubResource("CompressedTexture2D_6bcn4")
+region = Rect2(2000, 0, 2000, 2000)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qtl80"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_enyor")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1u8r1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 3.0
+}]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oqsec"]
+shader = ExtResource("3_pxxn1")
+shader_parameter/offset = Vector2(200, 200)
+shader_parameter/modulate = Color(0, 0, 0, 0.2)
+shader_parameter/source_modulate = Color(0, 0, 0, 0)
+shader_parameter/scale = 1.0
+shader_parameter/radius = 100.0
+shader_parameter/only_shadow = null
+shader_parameter/use_dissolve = null
+shader_parameter/dissolve_value = null
+shader_parameter/burn_size = null
+shader_parameter/burn_color = null
+
+[node name="wisp" type="Node2D"]
+z_index = 10
+scale = Vector2(0.08, 0.08)
+script = SubResource("GDScript_cfo1v")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.639216)
+material = SubResource("ShaderMaterial_f368b")
+sprite_frames = SubResource("SpriteFrames_qtl80")
+autoplay = "default"
+frame_progress = 0.928326
+
+[node name="shadow" type="AnimatedSprite2D" parent="."]
+z_index = -1
+material = SubResource("ShaderMaterial_oqsec")
+rotation = -0.00276899
+sprite_frames = SubResource("SpriteFrames_qtl80")
+autoplay = "default"
+frame_progress = 0.928326

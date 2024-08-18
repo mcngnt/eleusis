@@ -1,0 +1,123 @@
+[gd_scene load_steps=11 format=3 uid="uid://b227st38dku6j"]
+
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_e0w8l"]
+[ext_resource type="Texture2D" uid="uid://df6nd32211rqr" path="res://sprites/map.png" id="1_hwsyx"]
+[ext_resource type="Script" path="res://scripts/map.gd" id="3_ue8el"]
+[ext_resource type="Script" path="res://scripts/car.gd" id="4_scl3d"]
+[ext_resource type="Texture2D" uid="uid://1t2l8uo1a5fc" path="res://sprites/car.png" id="5_xty63"]
+[ext_resource type="PackedScene" uid="uid://bi6ogr5dpnpcs" path="res://scenes/dice.tscn" id="6_jxbnm"]
+[ext_resource type="PackedScene" uid="uid://bgox2qm8newi0" path="res://scenes/align_zone.tscn" id="7_fnooy"]
+[ext_resource type="Script" path="res://scripts/logic.gd" id="7_ok72j"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7oxdy"]
+texture = ExtResource("1_hwsyx")
+texture_region_size = Vector2i(32, 32)
+0:0/next_alternative_id = 8
+0:0/0 = 0
+0:0/1 = 1
+0:0/1/transpose = true
+0:0/2 = 2
+1:0/next_alternative_id = 5
+1:0/0 = 0
+1:0/1 = 1
+1:0/1/flip_v = true
+1:0/2 = 2
+1:0/2/transpose = true
+1:0/3 = 3
+1:0/3/flip_h = true
+1:0/3/transpose = true
+1:0/4 = 4
+2:0/next_alternative_id = 5
+2:0/0 = 0
+2:0/1 = 1
+2:0/1/flip_h = true
+2:0/2 = 2
+2:0/2/flip_v = true
+2:0/2/transpose = true
+2:0/3 = 3
+2:0/3/flip_h = true
+2:0/3/flip_v = true
+2:0/4 = 4
+3:0/next_alternative_id = 2
+3:0/0 = 0
+3:0/1 = 1
+0:1/next_alternative_id = 5
+0:1/0 = 0
+0:1/1 = 1
+0:1/1/flip_v = true
+0:1/2 = 2
+0:1/2/transpose = true
+0:1/3 = 3
+0:1/3/flip_h = true
+0:1/3/transpose = true
+0:1/4 = 4
+1:1/next_alternative_id = 5
+1:1/0 = 0
+1:1/1 = 1
+1:1/1/flip_v = true
+1:1/2 = 2
+1:1/2/transpose = true
+1:1/3 = 3
+1:1/3/flip_h = true
+1:1/3/transpose = true
+1:1/4 = 4
+
+[sub_resource type="TileSet" id="TileSet_vyun6"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_7oxdy")
+
+[node name="game" type="Node2D"]
+
+[node name="level" type="Node2D" parent="."]
+script = ExtResource("1_e0w8l")
+
+[node name="TileMap" type="TileMap" parent="level"]
+tile_set = SubResource("TileSet_vyun6")
+format = 2
+script = ExtResource("3_ue8el")
+
+[node name="car" type="Node2D" parent="level"]
+script = ExtResource("4_scl3d")
+
+[node name="Sprite2D" type="Sprite2D" parent="level/car"]
+texture = ExtResource("5_xty63")
+
+[node name="Timer" type="Timer" parent="level/car"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="run_button" type="Button" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -65.0
+offset_top = 18.0
+offset_right = 64.0
+offset_bottom = 73.0
+grow_horizontal = 2
+text = "RUN"
+
+[node name="dice" parent="CanvasLayer" instance=ExtResource("6_jxbnm")]
+position = Vector2(583, 584)
+
+[node name="align_zone" parent="CanvasLayer" instance=ExtResource("7_fnooy")]
+position = Vector2(577, 143)
+scale = Vector2(4, 1)
+
+[node name="dice2" parent="CanvasLayer" instance=ExtResource("6_jxbnm")]
+position = Vector2(708, 587)
+
+[node name="dice3" parent="CanvasLayer" instance=ExtResource("6_jxbnm")]
+position = Vector2(462, 587)
+
+[node name="dice4" parent="CanvasLayer" instance=ExtResource("6_jxbnm")]
+position = Vector2(846, 597)
+
+[node name="logic" type="Node2D" parent="."]
+script = ExtResource("7_ok72j")
+
+[connection signal="timeout" from="level/car/Timer" to="level/car" method="_on_timer_timeout"]
+[connection signal="button_up" from="CanvasLayer/run_button" to="logic" method="_on_run_button_button_up"]

@@ -1,0 +1,304 @@
+[gd_scene load_steps=13 format=3 uid="uid://b227st38dku6j"]
+
+[ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
+[ext_resource type="PackedScene" uid="uid://b5npdeulj50vj" path="res://scenes/asteroid.tscn" id="4_sp4bk"]
+[ext_resource type="Texture2D" uid="uid://b0skjd0m7qb5e" path="res://sprites/player.png" id="5_xcmyi"]
+[ext_resource type="PackedScene" uid="uid://bgox2qm8newi0" path="res://scenes/align_zone.tscn" id="7_fnooy"]
+[ext_resource type="PackedScene" uid="uid://gex2e2m7kq6n" path="res://scenes/logic.tscn" id="9_ka8u0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pl3p6"]
+bg_color = Color(0.66, 0.25388, 0.1914, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_p5xp4"]
+bg_color = Color(0.56, 0.215413, 0.1624, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_lqglt"]
+bg_color = Color(0.42, 0.16156, 0.1218, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1r8f8"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_thxhw"]
+bg_color = Color(6.73831e-07, 0.71896, 0.352519, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_coynx"]
+bg_color = Color(0, 0.564706, 0.27451, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0rkgd"]
+bg_color = Color(0, 0.392157, 0.298039, 1)
+
+[node name="game" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4, 4)
+script = ExtResource("1_suu85")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="cards" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/cards"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/cards"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/cards/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="held_dices_align" parent="CanvasLayer/cards/HBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+align_type = 2
+max_nb = 5
+margin = 350
+
+[node name="run_button" type="Button" parent="CanvasLayer/cards/HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_pl3p6")
+theme_override_styles/hover = SubResource("StyleBoxFlat_p5xp4")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_lqglt")
+text = "RUN"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/cards/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/cards"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.06
+mouse_filter = 2
+
+[node name="score_box" type="VBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.11
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.6
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.2
+mouse_filter = 2
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.79
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="artifacts_align" parent="CanvasLayer/score_box/HBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.1
+align_type = 1
+max_nb = 6
+align_on_x = false
+margin = 600
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.9
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="play_card_align" parent="CanvasLayer/score_box/HBoxContainer3" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_stretch_ratio = 5.6
+theme_override_styles/panel = SubResource("StyleBoxFlat_1r8f8")
+align_type = 6
+max_nb = 1
+margin = 0
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/score_box/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/score_box"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.52
+
+[node name="cards_box" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+mouse_filter = 2
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="shop_align" parent="CanvasLayer/cards_box/VBoxContainer3/HBoxContainer3" instance=ExtResource("7_fnooy")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 10.0
+align_type = 4
+margin = 500
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer3/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer3"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="next_button" type="Button" parent="CanvasLayer/cards_box/VBoxContainer3/HBoxContainer2"]
+visible = false
+custom_minimum_size = Vector2(100, 50)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_thxhw")
+theme_override_styles/hover = SubResource("StyleBoxFlat_coynx")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_0rkgd")
+text = "NEXT"
+
+[node name="VBoxContainer4" type="VBoxContainer" parent="CanvasLayer/cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer4"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="module_align" parent="CanvasLayer/cards_box/VBoxContainer4" instance=ExtResource("7_fnooy")]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+align_type = 3
+align_on_x = false
+margin = 700
+is_stack_style = true
+best_items_number = 7
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/cards_box/VBoxContainer4"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="VBoxContainer5" type="VBoxContainer" parent="CanvasLayer/cards_box"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.1
+mouse_filter = 2
+
+[node name="logic" parent="." node_paths=PackedStringArray("score_label", "score_box", "shop_align_zone", "next_button") instance=ExtResource("9_ka8u0")]
+score_label = NodePath("")
+score_box = NodePath("../CanvasLayer/score_box")
+shop_align_zone = NodePath("../CanvasLayer/cards_box/VBoxContainer3/HBoxContainer3/shop_align")
+next_button = NodePath("../CanvasLayer/cards_box/VBoxContainer3/HBoxContainer2/next_button")
+
+[node name="Timer" type="Timer" parent="logic"]
+wait_time = 2.0
+one_shot = true
+
+[node name="asteroid" parent="." instance=ExtResource("4_sp4bk")]
+
+[node name="Player" type="Sprite2D" parent="."]
+position = Vector2(-114, 30)
+scale = Vector2(0.214844, 0.214844)
+texture = ExtResource("5_xcmyi")
+
+[connection signal="button_up" from="CanvasLayer/cards/HBoxContainer2/run_button" to="logic" method="_on_run_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/cards_box/VBoxContainer3/HBoxContainer2/next_button" to="logic" method="_on_next_button_button_up"]
+[connection signal="timeout" from="logic/Timer" to="logic" method="_on_timer_timeout"]
