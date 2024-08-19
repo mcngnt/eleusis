@@ -22,6 +22,8 @@ var is_paid = false
 var starting_align_zone = null
 var starting_pos = Vector2()
 
+var number = 0
+
 
 func _ready():
 	target_position = parent.position
@@ -81,7 +83,9 @@ func _process(delta):
 	if !dragging:
 		parent.position = (target_position + parent.position)/2.0
 		if mouse_hovered && self == globals.current_element_hovered:
-			parent.position = (target_position + Vector2(0,-40) + parent.position)/2.0
+			parent.position = (target_position + Vector2(0,-20) + parent.position)/2.0
+		else:
+			parent.position = (target_position + Vector2(0,sin(Time.get_ticks_msec() * 0.002 + number * 1.) * 5) + parent.position)/2.0
 	else:
 		target_position = position
 	

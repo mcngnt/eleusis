@@ -8,6 +8,7 @@ const int ML = 0;
 uniform float AA_SCALE = 41.0;
 uniform float LINE_THICKNESS = 0.366;
 
+
 uniform vec4 modulate : source_color = vec4(1);
 
 

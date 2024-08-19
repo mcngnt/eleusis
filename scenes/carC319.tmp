@@ -1,0 +1,107 @@
+[gd_scene load_steps=16 format=3 uid="uid://bi6ogr5dpnpcs"]
+
+[ext_resource type="Script" path="res://scripts/card.gd" id="1_4umdn"]
+[ext_resource type="PackedScene" uid="uid://b3intptexv4c7" path="res://scenes/draggable.tscn" id="3_8xf1p"]
+[ext_resource type="Texture2D" uid="uid://dkqiuw02o55w6" path="res://sprites/cards/12_red.png" id="3_spuhq"]
+[ext_resource type="Shader" path="res://shader/upscale.gdshader" id="5_aaimd"]
+[ext_resource type="FontFile" uid="uid://l4v32s4eh8u2" path="res://fonts/alagard.ttf" id="5_h0c0a"]
+[ext_resource type="Texture2D" uid="uid://ch10368ioagaj" path="res://sprites/select1.png" id="7_pnq2l"]
+[ext_resource type="Texture2D" uid="uid://4m7gmx8883lx" path="res://sprites/select2.png" id="8_ml01d"]
+[ext_resource type="Script" path="res://scripts/tooltip_show.gd" id="9_j704l"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_b3w87"]
+resource_local_to_scene = true
+shader = ExtResource("5_aaimd")
+shader_parameter/AA_SCALE = 41.105
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1myl2"]
+shader = ExtResource("5_aaimd")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(0, 0, 0, 0.376471)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lhh8d"]
+size = Vector2(760, 1055)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_r4n4u"]
+shader = ExtResource("5_aaimd")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_e52rf"]
+font = ExtResource("5_h0c0a")
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_awo7d"]
+shader = ExtResource("5_aaimd")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yl1jn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_pnq2l")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ml01d")
+}],
+"loop": true,
+"name": &"default",
+"speed": 4.0
+}]
+
+[node name="card" type="Node2D"]
+scale = Vector2(0.2, 0.2)
+script = ExtResource("1_4umdn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 1
+material = SubResource("ShaderMaterial_b3w87")
+scale = Vector2(17, 17)
+texture = ExtResource("3_spuhq")
+
+[node name="Shadow" type="Sprite2D" parent="Sprite2D"]
+z_index = -2
+material = SubResource("ShaderMaterial_1myl2")
+position = Vector2(-2.35294, -2.35294)
+texture = ExtResource("3_spuhq")
+
+[node name="draggable" parent="." instance=ExtResource("3_8xf1p")]
+drag_type = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="draggable"]
+position = Vector2(-5.48363e-05, 2.50004)
+shape = SubResource("RectangleShape2D_lhh8d")
+
+[node name="price_label" type="Label" parent="."]
+material = SubResource("ShaderMaterial_r4n4u")
+offset_left = -270.0
+offset_top = 580.0
+offset_right = -216.0
+offset_bottom = 595.0
+scale = Vector2(10, 10)
+text = "100 UOL"
+label_settings = SubResource("LabelSettings_e52rf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="select" type="AnimatedSprite2D" parent="."]
+visible = false
+z_index = -1
+material = SubResource("ShaderMaterial_awo7d")
+scale = Vector2(17, 17)
+sprite_frames = SubResource("SpriteFrames_yl1jn")
+autoplay = "default"
+frame_progress = 0.229535
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0)
+script = ExtResource("9_j704l")

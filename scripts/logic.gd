@@ -22,10 +22,16 @@ extends Node2D
 @export var go_button : Button
 
 
+@export var center_money_rect : Control
+
 @export var draw_nb_left_label : Label
 @export var card_tape_nb_left_label : Label
 
+@export var tooltip_panel : Panel
+
 @export var indic : Sprite2D
+
+@export var coin_zone : Control
 
 func init_hand():
 	globals.delete_elements(globals.ALIGN_TYPE.HELD_CARDS, true)
@@ -35,6 +41,15 @@ func init_hand():
 		#print(card.draggable.align_zone.align_type)
 
 func start_level():
+	globals.rules = []
+	for c in globals.card_rules:
+		$"../CanvasLayer".remove_child(c)
+	globals.card_rules = []
+	globals.add_rule(globals.CARD_TYPE.X_OF_KIND)
+	globals.add_rule(globals.CARD_TYPE.FLUSH)
+	globals.add_rule(globals.CARD_TYPE.STRAIGHT)
+	globals.add_rule(globals.CARD_TYPE.ANY)
+	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
 	for e in scoring_objects:
 		e.visible = true
 	draw_button.disabled = false
@@ -62,16 +77,21 @@ func end_level():
 
 func _process(delta):
 	score_label.text =  str(globals.score)
-	money_label.text = "[center][font_size=16]%s[img=20]res://sprites//coin.png[/img]" % str(globals.money)
-	card_tape_nb_left_label.text = "\n" + str(globals.max_nb_tape - len(globals.played_cards))
-	draw_nb_left_label.text = "\n" + str(globals.nb_draw_left)
+	money_label.text = "[center][font_size=300]%s[img=375]res://sprites//coin.png[/img]" % str(globals.money)
+	card_tape_nb_left_label.text = str(globals.max_nb_tape - len(globals.played_cards))
+	draw_nb_left_label.text = str(globals.nb_draw_left)
 	if globals.is_computing_score && len(globals.played_cards) > 0:
 		indic.visible = true
-		indic.global_position = (indic.global_position + globals.played_cards[min(globals.current_scoring_card_id, len(globals.played_cards) - 1)].global_position + Vector2(0,200)) / 2
+		indic.global_position = (indic.global_position + globals.played_cards[min(globals.current_scoring_card_id, len(globals.played_cards) - 1)].global_position + Vector2(0,150)) / 2
 	else:
 		indic.visible = false
 		if len(globals.played_cards) > 0:
 			indic.global_position = globals.played_cards[0].global_position + Vector2(0,200)
+	
+	tooltip_panel.visible = globals.is_card_tooltip_active
+	tooltip_panel.global_position = globals.card_tooltip_pos - tooltip_panel.size * tooltip_panel.scale / 2
+	tooltip_panel.get_child(0).text = "[center]" + globals.card_tooltip_text
+	globals.is_card_tooltip_active = false
 	
 func _ready():
 	globals.draw_card.connect(_on_draw_card)
@@ -95,22 +115,22 @@ func add_money(delay, amount=1):
 	globals.money += amount
 
 func get_money(pos, amount, radius):
+	await get_tree().create_timer(.4 / globals.play_speed).timeout
+	for i in range(amount):
+		globals.create_droplet.emit(pos + radius * randf() * Vector2.from_angle(randf() * 2. * PI), .6 / globals.play_speed)
+		await get_tree().create_timer(.04 / globals.play_speed).timeout
 	await get_tree().create_timer(.2 / globals.play_speed).timeout
 	for i in range(amount):
-		globals.create_droplet.emit(pos + radius * randf() * Vector2.from_angle(randf() * 1. * PI), .3)
-		await get_tree().create_timer(.02 / globals.play_speed).timeout
-	await get_tree().create_timer(.1 / globals.play_speed).timeout
-	for i in range(amount):
-		globals.move_droplet.emit(Vector2(0.1,0.1),.3 / globals.play_speed, true)
-		add_money(.3 / globals.play_speed, randi() % 2 + 2)
-		await get_tree().create_timer(.1 / globals.play_speed).timeout
+		globals.move_droplet.emit(center_money_rect.global_position + center_money_rect.size /2,.6 / globals.play_speed, true)
+		add_money(.6 / globals.play_speed, randi() % 2 + 2)
+		await get_tree().create_timer(.2 / globals.play_speed).timeout
 	await get_tree().create_timer(.5 / globals.play_speed).timeout
 
 
 func _on_end_turn_button_button_up():
 	globals.is_computing_score = true
 	await globals.compute_score()
-	await get_money(Vector2(0.5,0.5) , randi() % 10 + 20, .1)
+	await get_money(coin_zone.global_position, randi() % 10 + 20, 100)
 	timer.start()
 
 

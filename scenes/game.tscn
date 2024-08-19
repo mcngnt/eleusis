@@ -1,10 +1,12 @@
-[gd_scene load_steps=60 format=3 uid="uid://b227st38dku6j"]
+[gd_scene load_steps=63 format=3 uid="uid://b227st38dku6j"]
 
 [ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
 [ext_resource type="Texture2D" uid="uid://b0myg3u4bowmk" path="res://sprites/tank.png" id="2_1jguu"]
+[ext_resource type="FontFile" uid="uid://o3nnytpjlt04" path="res://fonts/Gothica-Bold.ttf" id="4_k5kkh"]
 [ext_resource type="Texture2D" uid="uid://cruxky8xy0k13" path="res://sprites/discard_button1.png" id="4_rai5a"]
 [ext_resource type="Texture2D" uid="uid://bdkwmtj4xh8w4" path="res://sprites/discard_button2.png" id="5_1c1ra"]
 [ext_resource type="Texture2D" uid="uid://i181fobfy3ua" path="res://sprites/bg.png" id="5_1rrg5"]
+[ext_resource type="StyleBox" uid="uid://ckymrab6b7qyy" path="res://game.tres" id="5_tfdpi"]
 [ext_resource type="Texture2D" uid="uid://cerug20tnichw" path="res://sprites/stop_button2.png" id="5_y2u3f"]
 [ext_resource type="Texture2D" uid="uid://duw3qntxqlqb0" path="res://sprites/stop_button1.png" id="6_5q5k4"]
 [ext_resource type="PackedScene" uid="uid://bgox2qm8newi0" path="res://scenes/align_zone.tscn" id="7_fnooy"]
@@ -21,7 +23,10 @@
 [ext_resource type="Script" path="res://scripts/discard_button.gd" id="14_x7l65"]
 [ext_resource type="Texture2D" uid="uid://d2ektg5ebvo5n" path="res://sprites/disabled_button_go.png" id="16_boxul"]
 [ext_resource type="Script" path="res://scripts/droplet_manager.gd" id="16_y2x85"]
+[ext_resource type="Texture2D" uid="uid://fackjpq1x5eq" path="res://sprites/cards/discard_select.png" id="17_e6fwh"]
+[ext_resource type="PackedScene" uid="uid://b3f32mom3insm" path="res://scenes/card_tooltip.tscn" id="24_87mv0"]
 [ext_resource type="Texture2D" uid="uid://dthjmfl5jgnds" path="res://sprites/indic.png" id="27_nk6dh"]
+[ext_resource type="AudioStream" uid="uid://c8cmcir33bjuq" path="res://sounds/scoring.wav" id="27_vv8wf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ey4v4"]
 shader = ExtResource("10_78bjs")
@@ -29,42 +34,29 @@ shader_parameter/AA_SCALE = 41.0
 shader_parameter/LINE_THICKNESS = 0.366
 shader_parameter/modulate = Color(1, 1, 1, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4a83p"]
-shader = ExtResource("10_78bjs")
-shader_parameter/AA_SCALE = 41.0
-shader_parameter/LINE_THICKNESS = 0.366
-shader_parameter/modulate = Color(1, 1, 1, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_y4kbd"]
-font = ExtResource("11_08k7c")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_aiy17"]
 shader = ExtResource("10_78bjs")
 shader_parameter/AA_SCALE = 41.0
 shader_parameter/LINE_THICKNESS = 0.366
 shader_parameter/modulate = Color(1, 1, 1, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_5ttb3"]
-shader = ExtResource("10_78bjs")
-shader_parameter/AA_SCALE = 41.0
-shader_parameter/LINE_THICKNESS = 0.366
-shader_parameter/modulate = Color(1, 1, 1, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_qvnyb"]
-font = ExtResource("11_08k7c")
+font = ExtResource("4_k5kkh")
+font_size = 300
 outline_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1r8f8"]
-bg_color = Color(0, 0, 0, 0.188235)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oe75e"]
+bg_color = Color(0, 0, 0, 0)
 border_width_left = 5
 border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
-border_color = Color(0, 0, 0, 1)
+border_color = Color(0, 0, 0, 0.345098)
 corner_radius_top_left = 30
 corner_radius_top_right = 30
 corner_radius_bottom_right = 30
 corner_radius_bottom_left = 30
+shadow_color = Color(0, 0, 0, 0.12549)
 shadow_size = 5
 shadow_offset = Vector2(5, 5)
 
@@ -94,7 +86,6 @@ shader_parameter/modulate = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_huc0g"]
 font = ExtResource("11_08k7c")
-font_size = 48
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ont60"]
@@ -123,7 +114,6 @@ shader_parameter/modulate = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_r7vx7"]
 font = ExtResource("11_08k7c")
-font_size = 48
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pkh08"]
 shader = ExtResource("10_78bjs")
@@ -151,6 +141,12 @@ texture = ExtResource("13_vsn4v")
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_62jun"]
 texture = ExtResource("7_l8oqa")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6xomy"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vmuo1"]
 bg_color = Color(0, 0, 0, 0)
@@ -211,11 +207,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/main"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.25
-
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -224,35 +215,16 @@ mouse_filter = 2
 [node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.74
 
 [node name="water_tank_texrect" type="TextureRect" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3"]
 material = SubResource("ShaderMaterial_ey4v4")
-custom_minimum_size = Vector2(50, 250)
+custom_minimum_size = Vector2(25, 125)
 layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = ExtResource("2_1jguu")
 expand_mode = 3
-
-[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect"]
-visible = false
-material = SubResource("ShaderMaterial_4a83p")
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -87.0
-offset_top = -17.0
-offset_right = -52.0
-offset_bottom = -2.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(5, 5)
-text = "100 G"
-label_settings = SubResource("LabelSettings_y4kbd")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect"]
 material = SubResource("ShaderMaterial_aiy17")
@@ -262,62 +234,96 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -23.0
-offset_right = -75.0
-offset_bottom = -2.0
+offset_left = -105.0
+offset_top = -22.5
+offset_right = 1405.0
+offset_bottom = 417.5
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(4, 4)
-theme_override_fonts/normal_font = ExtResource("11_08k7c")
+scale = Vector2(0.1, 0.1)
+pivot_offset = Vector2(33, 10)
+theme_override_fonts/normal_font = ExtResource("4_k5kkh")
 bbcode_enabled = true
-text = "[center][font_size=16]100 [img=20]res://sprites//coin.png[/img]"
-fit_content = true
+text = "[center][font_size=300]XXXX"
+scroll_active = false
+autowrap_mode = 0
+
+[node name="center_money_rect" type="Control" parent="CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
 mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Control" type="Control" parent="CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="Control" type="Control" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer/Control"]
-material = SubResource("ShaderMaterial_5ttb3")
+[node name="Label" type="Label" parent="CanvasLayer/main/HBoxContainer/VBoxContainer/Control"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -176.5
-offset_top = -10.0
-offset_right = -126.5
-offset_bottom = 5.0
+offset_left = -208.5
+offset_top = -28.5
+offset_right = 1651.5
+offset_bottom = 332.5
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(7, 7)
+scale = Vector2(0.2, 0.2)
 size_flags_vertical = 3
-text = "XXXXX"
+text = "12345"
 label_settings = SubResource("LabelSettings_qvnyb")
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.54
+clip_text = true
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.68
 mouse_filter = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+mouse_filter = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+mouse_filter = 2
+
+[node name="align_zone" parent="CanvasLayer/main/HBoxContainer/VBoxContainer2/HBoxContainer2" instance=ExtResource("7_fnooy")]
+layout_mode = 2
+size_flags_stretch_ratio = 8.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_oe75e")
+align_type = 7
+is_frozen = true
+is_closed = true
+margin = 0.4
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer2/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+mouse_filter = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/main/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
 
 [node name="HBoxContainer5" type="HBoxContainer" parent="CanvasLayer/main"]
 layout_mode = 2
@@ -345,7 +351,7 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 5.6
-theme_override_styles/panel = SubResource("StyleBoxFlat_1r8f8")
+theme_override_styles/panel = ExtResource("5_tfdpi")
 align_type = 5
 is_frozen = true
 max_nb = 7
@@ -364,6 +370,11 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_vertical = 3
 
+[node name="money_zone" type="Control" parent="CanvasLayer/main/HBoxContainer7"]
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 4
+
 [node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/main"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -377,7 +388,7 @@ mouse_filter = 2
 
 [node name="draw_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer" node_paths=PackedStringArray("label")]
 material = SubResource("ShaderMaterial_ektw6")
-custom_minimum_size = Vector2(300, 150)
+custom_minimum_size = Vector2(150, 75)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -397,14 +408,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -46.5
-offset_right = 20.0
-offset_bottom = 46.5
+offset_left = -10.0
+offset_top = -1.5
+offset_right = 8.0
+offset_bottom = 16.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "
-7"
+scale = Vector2(1.5, 1.5)
+text = "7"
 label_settings = SubResource("LabelSettings_huc0g")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -421,7 +432,7 @@ mouse_filter = 2
 
 [node name="end_turn_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer2" node_paths=PackedStringArray("label")]
 material = SubResource("ShaderMaterial_ont60")
-custom_minimum_size = Vector2(300, 150)
+custom_minimum_size = Vector2(150, 75)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
@@ -445,28 +456,27 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -11.5
-offset_right = 20.0
-offset_bottom = 11.5
+offset_left = -6.0
+offset_top = -2.5
+offset_right = 3.0
+offset_bottom = 12.5
 grow_horizontal = 2
 grow_vertical = 2
-text = "
-7"
+scale = Vector2(1.5, 1.5)
+text = "7"
 label_settings = SubResource("LabelSettings_r7vx7")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="HBoxContainer8" type="HBoxContainer" parent="CanvasLayer/main"]
+[node name="HBoxContainer6" type="HBoxContainer" parent="CanvasLayer/main"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 0.5
-mouse_filter = 2
+size_flags_stretch_ratio = 0.06
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/main"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 2.06
+size_flags_stretch_ratio = 2.0
 mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer4"]
@@ -476,7 +486,7 @@ mouse_filter = 2
 
 [node name="draw_deck" type="Button" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer"]
 material = SubResource("ShaderMaterial_pkh08")
-custom_minimum_size = Vector2(162, 220)
+custom_minimum_size = Vector2(81, 110)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
@@ -500,13 +510,21 @@ mouse_filter = 2
 
 [node name="discard_deck" type="Button" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer2"]
 material = SubResource("ShaderMaterial_tml17")
-custom_minimum_size = Vector2(162, 220)
+custom_minimum_size = Vector2(81, 110)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 6
 theme_override_styles/hover = SubResource("StyleBoxTexture_47e5l")
 theme_override_styles/normal = SubResource("StyleBoxTexture_62jun")
 script = ExtResource("14_x7l65")
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/main/HBoxContainer4/VBoxContainer2/discard_deck"]
+material = SubResource("ShaderMaterial_6xomy")
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(1.7, 1.7)
+texture = ExtResource("17_e6fwh")
 
 [node name="HBoxContainer9" type="HBoxContainer" parent="CanvasLayer/main"]
 layout_mode = 2
@@ -515,6 +533,7 @@ size_flags_stretch_ratio = 0.4
 mouse_filter = 2
 
 [node name="shop_box" type="HBoxContainer" parent="CanvasLayer"]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -574,7 +593,7 @@ mouse_filter = 2
 
 [node name="next_button" type="Button" parent="CanvasLayer/shop_box/VBoxContainer3/HBoxContainer2"]
 material = SubResource("ShaderMaterial_1vkng")
-custom_minimum_size = Vector2(300, 150)
+custom_minimum_size = Vector2(150, 75)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 0
@@ -636,37 +655,50 @@ mouse_filter = 2
 
 [node name="Indic" type="Sprite2D" parent="CanvasLayer/deck"]
 material = SubResource("ShaderMaterial_tqfok")
-position = Vector2(388, 437)
-scale = Vector2(3, 3)
+position = Vector2(215, -48)
+scale = Vector2(1.5, 1.5)
 texture = ExtResource("27_nk6dh")
 
 [node name="droplet_manager" type="Node2D" parent="CanvasLayer"]
 script = ExtResource("16_y2x85")
 
+[node name="card_tooltip" parent="CanvasLayer" instance=ExtResource("24_87mv0")]
+offset_left = -594.0
+offset_top = -348.0
+offset_right = 656.0
+offset_bottom = 420.0
+
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
 script = ExtResource("1_suu85")
 
-[node name="logic" parent="." node_paths=PackedStringArray("score_label", "money_label", "shop_box", "draw_deck_align", "discard_deck_align", "scoring_objects", "starting_deck", "draw_deck", "discard_deck", "draw_button", "go_button", "draw_nb_left_label", "card_tape_nb_left_label", "indic") instance=ExtResource("9_ka8u0")]
+[node name="logic" parent="." node_paths=PackedStringArray("score_label", "money_label", "shop_box", "draw_deck_align", "discard_deck_align", "scoring_objects", "starting_deck", "draw_deck", "discard_deck", "draw_button", "go_button", "center_money_rect", "draw_nb_left_label", "card_tape_nb_left_label", "tooltip_panel", "indic", "coin_zone") instance=ExtResource("9_ka8u0")]
 z_index = -10
-score_label = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer/Control/Label")
+scale = Vector2(2, 2)
+score_label = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer/Control/Label")
 money_label = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect/RichTextLabel")
 shop_box = NodePath("../CanvasLayer/shop_box")
 draw_deck_align = NodePath("../CanvasLayer/deck/full_deck")
 discard_deck_align = NodePath("../CanvasLayer/deck/discard_deck")
-scoring_objects = [NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer/HBoxContainer/Control/Label"), NodePath("../CanvasLayer/main/HBoxContainer2/VBoxContainer2/play_card_align")]
+scoring_objects = [NodePath("../CanvasLayer/main/HBoxContainer2/VBoxContainer2/play_card_align")]
 starting_deck = [null, null, null]
 draw_deck = NodePath("../CanvasLayer/main/HBoxContainer4/VBoxContainer/draw_deck")
 discard_deck = NodePath("../CanvasLayer/main/HBoxContainer4/VBoxContainer2/discard_deck")
 draw_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button")
 go_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button")
+center_money_rect = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect/center_money_rect")
 draw_nb_left_label = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button/Label")
 card_tape_nb_left_label = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button/Label")
+tooltip_panel = NodePath("../CanvasLayer/card_tooltip")
 indic = NodePath("../CanvasLayer/deck/Indic")
+coin_zone = NodePath("../CanvasLayer/main/HBoxContainer7/money_zone")
 
 [node name="Timer" type="Timer" parent="logic"]
 wait_time = 0.3
 one_shot = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("27_vv8wf")
 
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button" to="logic" method="_on_draw_button_button_up"]
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button" to="logic" method="_on_end_turn_button_button_up"]

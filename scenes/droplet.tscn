@@ -16,5 +16,5 @@ script = ExtResource("1_8jwo7")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 500
 material = SubResource("ShaderMaterial_1kolw")
-scale = Vector2(3, 3)
+scale = Vector2(2, 2)
 texture = ExtResource("3_u0tik")

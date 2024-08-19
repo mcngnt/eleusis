@@ -39,6 +39,8 @@ func get_global_elements():
 			return globals.full_deck
 		globals.ALIGN_TYPE.DISCARD_DECK:
 			return globals.discard_deck
+		globals.ALIGN_TYPE.CARD_RULES:
+			return globals.card_rules
 		_:
 			return null
 
@@ -56,6 +58,8 @@ func _ready():
 			accepted_drag_type = [globals.DRAG_TYPE.CARD]
 		globals.ALIGN_TYPE.DISCARD_DECK:
 			accepted_drag_type = [globals.DRAG_TYPE.CARD]
+		globals.ALIGN_TYPE.CARD_RULES:
+			accepted_drag_type = [globals.DRAG_TYPE.CARD]
 		_:
 			pass
 	if show_preview:
@@ -63,7 +67,7 @@ func _ready():
 			var s = Sprite2D.new()
 			s.texture = tex_preview
 			s.z_index = 1
-			s.scale = Vector2(3.4,3.4)
+			s.scale = Vector2(1.7,1.7)
 			add_child(s)
 			preview_sprites.append(s)
 
@@ -90,6 +94,8 @@ func update_elements():
 			elements = globals.full_deck.duplicate()
 		globals.ALIGN_TYPE.DISCARD_DECK:
 			elements = globals.discard_deck.duplicate()
+		globals.ALIGN_TYPE.CARD_RULES:
+			elements = globals.card_rules.duplicate()
 		_:
 			pass
 
@@ -148,6 +154,7 @@ func arrange_elements():
 		elements[j].draggable.target_position = anchors[i][0]
 		#elements[j].z_index = 10 + (len(elements) - j)*5
 		elements[j].z_index = 10 + j * 5
+		elements[j].draggable.number = j
 		j += 1
 
 func try_add_element(e):

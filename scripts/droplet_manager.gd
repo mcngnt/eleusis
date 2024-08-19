@@ -12,8 +12,8 @@ func _on_create_droplet(pos, delay):
 	var droplet = DROPLET.instantiate()
 	add_child(droplet)
 	var tween = get_tree().create_tween()
-	droplet.uv_pos = Vector2.from_angle(randf() * 2. * PI) + Vector2(.5,.6)
-	tween.tween_property(droplet, "uv_pos", pos, delay).set_trans(Tween.TRANS_EXPO)
+	droplet.position = Vector2.from_angle(randf() * 2. * PI) * get_viewport().size.x + Vector2(get_viewport().size / 2) + Vector2(0,50)
+	tween.tween_property(droplet, "position", pos, delay).set_trans(Tween.TRANS_EXPO)
 	
 	#droplet.position = pos
 	#tween.tween_property(droplet, "drop_scale", 1., delay).set_trans(Tween.TRANS_EXPO)
@@ -25,7 +25,7 @@ func _on_move_droplet(target_pos, delay, destroy=false):
 	var current_droplet = get_child(i)
 	moving_droplets.append(current_droplet)
 	var tween = get_tree().create_tween()
-	tween.tween_property(current_droplet, "uv_pos", target_pos, delay).set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(current_droplet, "position", target_pos, delay).set_trans(Tween.TRANS_EXPO)
 	tween.parallel().tween_property(current_droplet, "scale", Vector2(), delay).set_trans(Tween.TRANS_LINEAR)
 	await tween.finished
 	moving_droplets.erase(current_droplet)

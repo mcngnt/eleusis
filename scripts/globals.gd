@@ -1,9 +1,13 @@
 extends Node
 
 enum DRAG_TYPE {NONE, CARD, ARTIFACT}
-enum ALIGN_TYPE {NONE, ARTIFACTS, HELD_CARDS, SHOP, FULL_DECK, PLAYED_CARDS, DISCARD_DECK}
+enum ALIGN_TYPE {NONE, ARTIFACTS, HELD_CARDS, SHOP, FULL_DECK, PLAYED_CARDS, DISCARD_DECK, CARD_RULES}
 enum COMBO_TYPE {ANY, X_OF_KIND, FLUSH, STRAIGHT}
 enum COMBO_MODE {ADD, MULT}
+
+enum CARD_TYPE {NONE, BASIC, ANY, X_OF_KIND, FLUSH, STRAIGHT, RED_FLAG, BLACK_SWAN}
+enum CARD_RANK {ZERO,ACE,TWO,THREE, FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,TEN,JACK,QUEEN,KING}
+enum CARD_COLOR {RED,BLACK}
 
 #Minimum number of cards, Base score, Combo mode
 var combo_stats = {COMBO_TYPE.ANY : [],COMBO_TYPE.X_OF_KIND : [2, 20, COMBO_MODE.MULT], COMBO_TYPE.FLUSH : [3, 10, COMBO_MODE.ADD], COMBO_TYPE.STRAIGHT : [2, 20, COMBO_MODE.ADD]}
@@ -28,6 +32,7 @@ var shop = []
 var full_deck = []
 var played_cards = []
 var discard_deck = []
+var card_rules = []
 
 var play_speed = 1
 
@@ -48,58 +53,129 @@ var nb_draw_left
 var is_computing_score = false
 
 var current_element_hovered = null
-
 var current_scoring_card_id = 0
+var rules = []
 
+var card_tooltip_pos = Vector2()
+var is_card_tooltip_active = false
+var card_tooltip_text = ""
+
+
+func add_rule(type):
+	rules.append(type)
+	var c = CARD.instantiate()
+	c.type = type
+	c.scale = Vector2(0.065, 0.065)
+	$"../game/CanvasLayer".add_child(c)
+	card_rules.append(c)
+
+func get_card_path(type, rank = 0, color = 0):
+	match type:
+		globals.CARD_TYPE.RED_FLAG:
+			return "res://sprites/cards/red_flag.png"
+		globals.CARD_TYPE.BLACK_SWAN:
+			return "res://sprites/cards/black_swan.png"
+		globals.CARD_TYPE.X_OF_KIND:
+			return "res://sprites/cards/same.png"
+		globals.CARD_TYPE.FLUSH:
+			return "res://sprites/cards/color.png"
+		globals.CARD_TYPE.STRAIGHT:
+			return "res://sprites/cards/straight.png"
+		globals.CARD_TYPE.ANY:
+			return "res://sprites/cards/any.png"
+		_:
+			return "res://sprites/cards/%s_%s.png" % [str(rank), str(globals.CARD_COLOR.keys()[color]).to_lower()]
+
+func get_rule_desc(type):
+	match type:
+		CARD_TYPE.X_OF_KIND:
+			return "activates x of a kind combo (play cards with same rank)"
+		CARD_TYPE.ANY:
+			return "activates the any combo (score its value)"
+		CARD_TYPE.STRAIGHT:
+			return "activates the straight combo (play cards with increasing rank)"
+		CARD_TYPE.FLUSH:
+			return "activates the flush combo (play cards with same color)"
+		CARD_TYPE.BASIC:
+			return ""
+		CARD_TYPE.RED_FLAG:
+			return "+20 if red card"
+		CARD_TYPE.BLACK_SWAN:
+			return "1 in 5 chance for x5 if black card"
+
+func launch_effect(card, bonus, op, name, rule_id):
+	var effect = SCORE_EFFECT.instantiate()
+	$"../game/CanvasLayer".add_child(effect)
+	effect.position = card.global_position + Vector2(0,-150)
+	effect.launch(bonus, op, name)
+	card_rules[rule_id].play_card_tween()
+	await card.play_card_tween().finished
+	
+func compute_combo(triggered_cards, combo, rule_id):
+	var card = triggered_cards[0]
+	var bonus = 0
+	var last_card = card
+	var count = 0
+	for prev_card in triggered_cards:
+		match combo:
+			COMBO_TYPE.ANY:
+				bonus = card.get_value()
+				break
+			COMBO_TYPE.X_OF_KIND:
+				if prev_card != last_card && last_card.rank != prev_card.rank:
+					break
+			COMBO_TYPE.FLUSH:
+				if prev_card != last_card && last_card.color != prev_card.color:
+					break
+			COMBO_TYPE.STRAIGHT:
+				if prev_card != last_card && last_card.get_ordering() - 1 != prev_card.get_ordering():
+					break
+		count += 1
+		last_card = prev_card
+	if combo != COMBO_TYPE.ANY && count >= combo_stats[combo][0]:
+		match combo_stats[combo][2]:
+			COMBO_MODE.ADD:
+				bonus = combo_stats[combo][1] * (count - combo_stats[combo][0] + 1)
+			COMBO_MODE.MULT:
+				bonus = combo_stats[combo][1] * 2 ** (count - combo_stats[combo][0])
+	if bonus > 0:
+		score += bonus
+		var name = "none"
+		match combo:
+			COMBO_TYPE.ANY:
+				name = "any " + card.get_rank_name()
+			COMBO_TYPE.X_OF_KIND:
+				name = str(count) + " of a kind"
+			_:
+				name = COMBO_TYPE.keys()[combo].to_lower() + " " + str(count)
+		await launch_effect(card,bonus, "+", name, rule_id)
+			
 func compute_score():
 	current_scoring_card_id = 0
 	var triggered_cards = []
 	while current_scoring_card_id < len(played_cards):
 		var card = played_cards[current_scoring_card_id]
 		triggered_cards.push_front(card)
-		for combo in COMBO_TYPE.values():
-			var bonus = 0
-			var last_card = card
-			var count = 0
-			for prev_card in triggered_cards:
-				match combo:
-					COMBO_TYPE.ANY:
-						bonus = card.get_value()
-						break
-					COMBO_TYPE.X_OF_KIND:
-						if prev_card != last_card && last_card.rank != prev_card.rank:
-							break
-					COMBO_TYPE.FLUSH:
-						if prev_card != last_card && last_card.color != prev_card.color:
-							break
-					COMBO_TYPE.STRAIGHT:
-						if prev_card != last_card && last_card.get_ordering() - 1 != prev_card.get_ordering():
-							break
-				count += 1
-				last_card = prev_card
-			if combo != COMBO_TYPE.ANY && count >= combo_stats[combo][0]:
-				match combo_stats[combo][2]:
-					COMBO_MODE.ADD:
-						bonus = combo_stats[combo][1] * (count - combo_stats[combo][0] + 1)
-					COMBO_MODE.MULT:
-						bonus = combo_stats[combo][1] * 2 ** (count - combo_stats[combo][0])
-			if bonus > 0:
-				score += bonus
-				var effect = SCORE_EFFECT.instantiate()
-				$"../game/CanvasLayer".add_child(effect)
-				effect.position = card.global_position + Vector2(0,-200)
-				var name = "none"
-				match combo:
-					COMBO_TYPE.ANY:
-						name = "any " + card.get_rank_name()
-					COMBO_TYPE.X_OF_KIND:
-						name = str(count) + " of a kind"
-					_:
-						name = COMBO_TYPE.keys()[combo].to_lower() + " " + str(count)
-				effect.launch(bonus, "+", name)
-				await card.play_card_tween().finished
-		
 		card.trigger()
+		for i in range(len(rules)):
+			var card_type = rules[i]
+			match card_type:
+				CARD_TYPE.ANY:
+					await compute_combo(triggered_cards, COMBO_TYPE.ANY, i)
+				CARD_TYPE.X_OF_KIND:
+					await compute_combo(triggered_cards, COMBO_TYPE.X_OF_KIND, i)
+				CARD_TYPE.FLUSH:
+					await compute_combo(triggered_cards, COMBO_TYPE.FLUSH, i)
+				CARD_TYPE.STRAIGHT:
+					await compute_combo(triggered_cards, COMBO_TYPE.STRAIGHT, i)
+				CARD_TYPE.RED_FLAG:
+					if card.color == CARD_COLOR.RED:
+						score += 20
+						await launch_effect(card,20, "+", "red flag", i)
+				CARD_TYPE.BLACK_SWAN:
+					if card.color == CARD_COLOR.BLACK && randi() % 5 == 0:
+						score *= 5
+						await launch_effect(card,5, "x", "black swan", i)
 		current_scoring_card_id += 1
 
 
@@ -134,7 +210,8 @@ func init_align_randomly(align_type, nb = 0,delete_elements=true, sample_from=fa
 		for r in range(1,14):
 			for c in range(2):
 				var e = CARD.instantiate()
-				e.init_attributes(r, c)
+				#e.init_attributes(r, c)
+				e.sample_randomly()
 				el.append(e)
 		full_deck = el.duplicate()
 		return
