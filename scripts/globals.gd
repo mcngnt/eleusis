@@ -60,6 +60,8 @@ var card_tooltip_pos = Vector2()
 var is_card_tooltip_active = false
 var card_tooltip_text = ""
 
+var current_effect_pitch = 1.
+const NB_TRIGGER_MAX_PITCH = 20.
 
 func add_rule(type):
 	rules.append(type)
@@ -109,6 +111,8 @@ func launch_effect(card, bonus, op, name, rule_id):
 	effect.position = card.global_position + Vector2(0,-150)
 	effect.launch(bonus, op, name)
 	card_rules[rule_id].play_card_tween()
+	audio_manager.play_sound(audio_manager.SOUNDS.SCORE, current_effect_pitch)
+	current_effect_pitch += (audio_manager.MAX_PITCH - 1.) / NB_TRIGGER_MAX_PITCH
 	await card.play_card_tween().finished
 	
 func compute_combo(triggered_cards, combo, rule_id):
@@ -151,6 +155,7 @@ func compute_combo(triggered_cards, combo, rule_id):
 		await launch_effect(card,bonus, "+", name, rule_id)
 			
 func compute_score():
+	current_effect_pitch = 1.
 	current_scoring_card_id = 0
 	var triggered_cards = []
 	while current_scoring_card_id < len(played_cards):

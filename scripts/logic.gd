@@ -35,7 +35,10 @@ extends Node2D
 
 func init_hand():
 	globals.delete_elements(globals.ALIGN_TYPE.HELD_CARDS, true)
-	globals.init_align_randomly(globals.ALIGN_TYPE.HELD_CARDS, globals.start_held_card_nb, true, true)
+	#globals.init_align_randomly(globals.ALIGN_TYPE.HELD_CARDS, globals.start_held_card_nb, true, true)
+	for i in range(globals.start_held_card_nb):
+		globals.draw_card.emit()
+		await get_tree().create_timer(.1 / globals.play_speed).timeout
 	globals.score = 0
 	#for card in globals.held_cards:
 		#print(card.draggable.align_zone.align_type)
@@ -105,6 +108,7 @@ func _on_next_button_button_up():
 
 func _on_draw_card():
 	globals.init_align_randomly(globals.ALIGN_TYPE.HELD_CARDS, 1,false, true)
+	audio_manager.play_sound(audio_manager.SOUNDS.CARD)
 
 func _on_timer_timeout():
 	globals.is_computing_score = false
@@ -119,11 +123,13 @@ func get_money(pos, amount, radius):
 	for i in range(amount):
 		globals.create_droplet.emit(pos + radius * randf() * Vector2.from_angle(randf() * 2. * PI), .6 / globals.play_speed)
 		await get_tree().create_timer(.04 / globals.play_speed).timeout
+		audio_manager.play_sound(audio_manager.SOUNDS.INCOMING_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
 	await get_tree().create_timer(.2 / globals.play_speed).timeout
 	for i in range(amount):
 		globals.move_droplet.emit(center_money_rect.global_position + center_money_rect.size /2,.6 / globals.play_speed, true)
 		add_money(.6 / globals.play_speed, randi() % 2 + 2)
 		await get_tree().create_timer(.2 / globals.play_speed).timeout
+		audio_manager.play_sound(audio_manager.SOUNDS.GET_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
 	await get_tree().create_timer(.5 / globals.play_speed).timeout
 
 
@@ -188,5 +194,6 @@ func _on_draw_button_button_up():
 		var nb_to_draw = globals.start_held_card_nb - len(globals.held_cards)
 		while nb_to_draw > 0:
 			globals.draw_card.emit()
+			await get_tree().create_timer(.1 / globals.play_speed).timeout
 			nb_to_draw -= 1
 		globals.nb_draw_left -= 1

@@ -164,9 +164,7 @@ func try_add_element(e):
 		elements.insert(i, e)
 		update_globals()
 		if align_type == globals.ALIGN_TYPE.PLAYED_CARDS:
-			pass
-			#globals.delete_elements(align_type, true)
-			#e.play()
+			audio_manager.play_sound(audio_manager.SOUNDS.ACCEPT)
 
 
 func _process(delta):

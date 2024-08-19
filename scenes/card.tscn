@@ -99,7 +99,7 @@ autoplay = "default"
 frame_progress = 0.229535
 
 [node name="top_panel_pos" type="Node2D" parent="."]
-position = Vector2(0, -970)
+position = Vector2(0, -1330)
 
 [node name="bot_panel_pos" type="Node2D" parent="."]
-position = Vector2(0, 1130)
+position = Vector2(9.53674e-07, 1440)

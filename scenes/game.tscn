@@ -667,6 +667,7 @@ offset_left = -594.0
 offset_top = -348.0
 offset_right = 656.0
 offset_bottom = 420.0
+scale = Vector2(0.15, 0.15)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
