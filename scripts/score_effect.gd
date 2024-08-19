@@ -5,6 +5,10 @@ extends Node2D
 @onready var circle = $Circle
 @onready var effect_label = $effect_label
 
+var plus_color = Color.html("#ff5959")
+var x_color = Color.html("#ffc100")
+var combo_color = Color.html("#47b9ff")
+var effect_color = Color.html("#6cff47")
 #var bonus_value = 0
 #var operator = "+"
 #var effect_name = "none"

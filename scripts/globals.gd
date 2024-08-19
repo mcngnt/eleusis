@@ -106,7 +106,7 @@ func get_rule_desc(type):
 		CARD_TYPE.BLACK_SWAN:
 			return "1 in 5 chance for x5 if black card"
 
-func launch_effect(card, bonus, op, name, rule_id):
+func launch_effect(card, bonus, op, name, rule_id, is_combo=false):
 	var effect = SCORE_EFFECT.instantiate()
 	$"../game/CanvasLayer".add_child(effect)
 	effect.position = card.global_position + Vector2(0,-150)
@@ -153,7 +153,7 @@ func compute_combo(triggered_cards, combo, rule_id):
 				name = str(count) + " of a kind"
 			_:
 				name = COMBO_TYPE.keys()[combo].to_lower() + " " + str(count)
-		await launch_effect(card,bonus, "+", name, rule_id)
+		await launch_effect(card,bonus, "+", name, rule_id, true)
 			
 func compute_score():
 	current_effect_pitch = 1.
