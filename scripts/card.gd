@@ -36,8 +36,7 @@ func get_value():
 		_:
 			return rank
 
-func get_rank_name():
-	return globals.CARD_RANK.keys()[rank].to_lower()
+
 
 func get_ordering():
 	match rank:
@@ -123,5 +122,9 @@ func _process(delta):
 			globals.card_tooltip_pos = top_panel_pos.global_position
 		else:
 			globals.card_tooltip_pos = bot_panel_pos.global_position
-		globals.card_tooltip_text = globals.get_rule_desc(type)
+		if draggable.align_zone.align_type == globals.ALIGN_TYPE.CARD_RULES:
+			globals.card_tooltip_text = globals.get_rule_desc(type)
+		else:
+			globals.card_tooltip_text = globals.get_card_descr(self)
+		globals.card_tooltip_title = globals.get_card_title(type)
 		globals.is_card_tooltip_active = true

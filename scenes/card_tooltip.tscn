@@ -1,8 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://b3f32mom3insm"]
+[gd_scene load_steps=4 format=3 uid="uid://b3f32mom3insm"]
 
+[ext_resource type="StyleBox" uid="uid://dphhg0456d1yi" path="res://scenes/card_tooltip.tres" id="1_2dv0g"]
 [ext_resource type="FontFile" uid="uid://o3nnytpjlt04" path="res://fonts/Gothica-Bold.ttf" id="1_a2ems"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hss6e"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0k25"]
 bg_color = Color(0.917647, 0.917647, 0.917647, 1)
 border_width_left = 10
 border_width_top = 10
@@ -28,7 +29,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.1, 0.1)
 pivot_offset = Vector2(625, 384)
-theme_override_styles/panel = SubResource("StyleBoxFlat_hss6e")
+theme_override_styles/panel = ExtResource("1_2dv0g")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
 layout_mode = 1
@@ -45,7 +46,30 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/default_color = Color(0, 0, 0, 1)
 theme_override_fonts/normal_font = ExtResource("1_a2ems")
+theme_override_font_sizes/normal_font_size = 120
+bbcode_enabled = true
+text = "test"
+fit_content = true
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 784.0
+offset_right = 1245.0
+offset_bottom = 994.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0k25")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 0.11
+anchor_bottom = 0.246
+offset_left = 30.0
+offset_top = 20.0
+offset_right = 1093.6
+offset_bottom = 208.66
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("1_a2ems")
 theme_override_font_sizes/normal_font_size = 140
 bbcode_enabled = true
-text = "[center]activates straight combo (play cards with increasing "
-fit_content = true
+text = "[center] black swan"

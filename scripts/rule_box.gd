@@ -29,7 +29,6 @@ func _process(delta):
 			var r = TextureRect.new()
 			r.texture = load(globals.get_card_path(card_type))
 			r.scale = Vector2(1.25,1.25)
-			r.tooltip_text = globals.get_rule_desc(card_type)
 			rects.append(r)
 		for i in range(len(rects)):
 			add_child(rects[i])

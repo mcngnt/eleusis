@@ -35,7 +35,7 @@ var played_cards = []
 var discard_deck = []
 var card_rules = []
 
-var play_speed = 1
+var play_speed = 1.5
 
 var showing_deck = false
 var showing_discard = false
@@ -60,9 +60,18 @@ var rules = []
 var card_tooltip_pos = Vector2()
 var is_card_tooltip_active = false
 var card_tooltip_text = ""
+var card_tooltip_title = ""
 
 var current_effect_pitch = 1.
 const NB_TRIGGER_MAX_PITCH = 20.
+
+var combo_color = Color.html("#dd47ff")
+
+func get_rank_name(rank):
+	if rank <= 10 && rank != 1:
+		return str(rank)
+	else:
+		return CARD_RANK.keys()[rank].to_lower()
 
 func add_rule(type):
 	rules.append(type)
@@ -89,28 +98,60 @@ func get_card_path(type, rank = 0, color = 0):
 		_:
 			return "res://sprites/cards/%s_%s.png" % [str(rank), str(globals.CARD_COLOR.keys()[color]).to_lower()]
 
+func get_combo_text(text):
+	return "[color=%s]" % combo_color.to_html() + text + "[/color]"
+
 func get_rule_desc(type):
+	var base = "none"
 	match type:
 		CARD_TYPE.X_OF_KIND:
-			return "activates x of a kind combo (play cards with same rank)"
+			base = "activates the " + get_combo_text("x of a kind combo") +  " (play cards with same rank)"
 		CARD_TYPE.ANY:
-			return "activates the any combo (score its value)"
+			base = "activates the " + get_combo_text("any combo") +  " (score its value)"
 		CARD_TYPE.STRAIGHT:
-			return "activates the straight combo (play cards with increasing rank)"
+			base = "activates the " + get_combo_text("straight combo") +  " (play cards with increasing rank)"
 		CARD_TYPE.FLUSH:
-			return "activates the flush combo (play cards with same color)"
+			base = "activates the " + get_combo_text("flush combo") +  " (play cards with same color)"
+		CARD_TYPE.RED_FLAG:
+			base = "+20 if red card"
+		CARD_TYPE.BLACK_SWAN:
+			base = "1 in 5 chance for x5 if black card"
+	#return "[font_size=150][outline_color=#000][outline_size=30][color=#787878]rule[/color][/outline_size][/outline_color][/font_size]" + " : " + base
+	return "[u]RULE[/u] : " + base
+
+func get_card_color_string(color):
+	match color:
+		CARD_COLOR.RED:
+			return "hearts"
+	return "spades"
+
+func get_card_descr(card):
+	return ("" if card.color else "[color=#e60000]") + get_rank_name(card.rank) + " of " + get_card_color_string(card.color) + ("" if card.color else "[/color]") + "\n[font_size=100]" + get_rule_desc(card.type)
+
+
+func get_card_title(type):
+	match type:
 		CARD_TYPE.BASIC:
 			return ""
-		CARD_TYPE.RED_FLAG:
-			return "+20 if red card"
-		CARD_TYPE.BLACK_SWAN:
-			return "1 in 5 chance for x5 if black card"
+		CARD_TYPE.ANY:
+			return get_combo_text("any") + " card"
+		CARD_TYPE.STRAIGHT:
+			return get_combo_text("straight") + " card"
+		CARD_TYPE.X_OF_KIND:
+			return get_combo_text("X of a kind") + " card"
+		CARD_TYPE.FLUSH:
+			return get_combo_text("flush") + " card"
+		_:
+			return CARD_TYPE.keys()[type].to_lower().replace("_", " ")
 
-func launch_effect(card, bonus, op, name, rule_id, is_combo=false):
+
+func launch_effect(card, bonus, op, rule_id, is_combo=false, name = ""):
 	var effect = SCORE_EFFECT.instantiate()
 	$"../game/CanvasLayer".add_child(effect)
 	effect.position = card.global_position + Vector2(0,-150)
-	effect.launch(bonus, op, name)
+	if name == "":
+		name = get_card_title(card.type)
+	effect.launch(bonus, op, name, is_combo)
 	card_rules[rule_id].play_card_tween()
 	audio_manager.play_sound(audio_manager.SOUNDS.SCORE, current_effect_pitch)
 	current_effect_pitch += (audio_manager.MAX_PITCH - 1.) / NB_TRIGGER_MAX_PITCH
@@ -143,17 +184,17 @@ func compute_combo(triggered_cards, combo, rule_id):
 				bonus = combo_stats[combo][1] * (count - combo_stats[combo][0] + 1)
 			COMBO_MODE.MULT:
 				bonus = combo_stats[combo][1] * 2 ** (count - combo_stats[combo][0])
-	if bonus > 0:
+	if bonus > 0 || combo == COMBO_TYPE.ANY:
 		score += bonus
 		var name = "none"
 		match combo:
 			COMBO_TYPE.ANY:
-				name = "any " + card.get_rank_name()
+				name = "any " + get_rank_name(card.rank)
 			COMBO_TYPE.X_OF_KIND:
 				name = str(count) + " of a kind"
 			_:
 				name = COMBO_TYPE.keys()[combo].to_lower() + " " + str(count)
-		await launch_effect(card,bonus, "+", name, rule_id, true)
+		await launch_effect(card,bonus, "+", rule_id, true, name)
 			
 func compute_score():
 	current_effect_pitch = 1.
@@ -177,11 +218,11 @@ func compute_score():
 				CARD_TYPE.RED_FLAG:
 					if card.color == CARD_COLOR.RED:
 						score += 20
-						await launch_effect(card,20, "+", "red flag", i)
+						await launch_effect(card,20, "+", i)
 				CARD_TYPE.BLACK_SWAN:
 					if card.color == CARD_COLOR.BLACK && randi() % 5 == 0:
 						score *= 5
-						await launch_effect(card,5, "x", "black swan", i)
+						await launch_effect(card,5, "x", i)
 		current_scoring_card_id += 1
 
 

@@ -29,7 +29,7 @@ void fragment() {
 		float dist = length(pos - true_position);
 		float current_infl = ball_infl;
 		current_infl /= (pow(abs(pos.x - true_position.x)*1.,2.) + pow(abs(pos.y - true_position.y)*1.,2.0));
-		infl += current_infl * scales[i]; 
+		infl += current_infl * scales[i];
 	}
 	if(infl > threshold)
 	{

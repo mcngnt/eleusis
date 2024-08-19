@@ -17,7 +17,7 @@ font_color = Color(0, 0, 0, 1)
 shader = ExtResource("2_uhrjo")
 shader_parameter/AA_SCALE = 41.0
 shader_parameter/LINE_THICKNESS = 0.366
-shader_parameter/modulate = Color(0.424, 1, 0.28, 1)
+shader_parameter/modulate = Color(0.868, 0.28, 1, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_m88rd"]
 shader = ExtResource("2_uhrjo")

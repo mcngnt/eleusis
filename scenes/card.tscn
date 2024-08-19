@@ -57,6 +57,9 @@ animations = [{
 [node name="card" type="Node2D"]
 scale = Vector2(0.1, 0.1)
 script = ExtResource("1_4umdn")
+type = null
+rank = null
+color = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1
@@ -99,7 +102,7 @@ autoplay = "default"
 frame_progress = 0.229535
 
 [node name="top_panel_pos" type="Node2D" parent="."]
-position = Vector2(0, -1330)
+position = Vector2(0, -1600)
 
 [node name="bot_panel_pos" type="Node2D" parent="."]
-position = Vector2(9.53674e-07, 1440)
+position = Vector2(6.77626e-21, 1660)

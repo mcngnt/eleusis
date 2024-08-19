@@ -98,6 +98,11 @@ func _process(delta):
 	tooltip_panel.visible = globals.is_card_tooltip_active
 	tooltip_panel.global_position = globals.card_tooltip_pos - tooltip_panel.size * tooltip_panel.scale / 2
 	tooltip_panel.get_child(0).text = "[center]" + globals.card_tooltip_text
+	if globals.card_tooltip_title != "":
+		tooltip_panel.get_child(1).visible = true
+		tooltip_panel.get_child(1).get_child(0).text = "[center]" + globals.card_tooltip_title
+	else:
+		tooltip_panel.get_child(1).visible = false
 	globals.is_card_tooltip_active = false
 	
 func _ready():
@@ -147,8 +152,8 @@ func get_money(pos, amount, radius):
 	await get_tree().create_timer(.2 / globals.play_speed).timeout
 	for i in range(amount):
 		globals.move_droplet.emit(center_money_rect.global_position + center_money_rect.size /2,.6 / globals.play_speed, true)
-		add_money(.6 / globals.play_speed, randi() % 2 + 2)
-		await get_tree().create_timer(.2 / globals.play_speed).timeout
+		add_money(.5 / globals.play_speed, randi() % 2 + 2)
+		await get_tree().create_timer(.1 / globals.play_speed).timeout
 		audio_manager.play_sound(audio_manager.SOUNDS.GET_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
 	await get_tree().create_timer(.5 / globals.play_speed).timeout
 

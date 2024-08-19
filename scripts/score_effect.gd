@@ -7,8 +7,7 @@ extends Node2D
 
 var plus_color = Color.html("#ff5959")
 var x_color = Color.html("#ffc100")
-var combo_color = Color.html("#47b9ff")
-var effect_color = Color.html("#6cff47")
+var effect_color = Color.html("#47b9ff")
 #var bonus_value = 0
 #var operator = "+"
 #var effect_name = "none"
@@ -21,9 +20,19 @@ func _ready():
 	rectangle.visible = false
 	circle.visible = false
 
-func launch(bonus_value = 0, operator = "+", effect_name = "none"):
+func launch(bonus_value = 0, operator = "+", effect_name = "none", is_combo = false):
 	bonus_label.text = operator + str(bonus_value)
 	effect_label.text = effect_name
+	
+	if operator == "+":
+		circle.material.set_shader_parameter("modulate", plus_color)
+	else:
+		circle.material.set_shader_parameter("modulate", x_color)
+	
+	if is_combo:
+		rectangle.material.set_shader_parameter("modulate", globals.combo_color)
+	else:
+		rectangle.material.set_shader_parameter("modulate", effect_color)
 	
 	bonus_label.visible = true
 	effect_label.visible = true
