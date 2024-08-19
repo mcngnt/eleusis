@@ -1,5 +1,6 @@
 extends Node2D
 
+@export var title_box : VBoxContainer
 
 @export var score_label : Label
 @export var money_label : RichTextLabel
@@ -12,8 +13,6 @@ extends Node2D
 @onready var timer = $Timer
 
 @export var scoring_objects : Array[Control]
-
-@export var starting_deck : Array[Node2D]
 
 @export var draw_deck : Button
 @export var discard_deck : Button
@@ -44,6 +43,8 @@ func init_hand():
 		#print(card.draggable.align_zone.align_type)
 
 func start_level():
+	draw_deck.disabled = false
+	discard_deck.disabled = false
 	globals.rules = []
 	for c in globals.card_rules:
 		$"../CanvasLayer".remove_child(c)
@@ -71,7 +72,10 @@ func end_level():
 	shop_box.visible = true
 	globals.delete_elements(globals.ALIGN_TYPE.PLAYED_CARDS, true)
 	globals.delete_elements(globals.ALIGN_TYPE.DISCARD_DECK, true)
-	globals.init_align_randomly(globals.ALIGN_TYPE.SHOP, 3)
+	#globals.init_align_randomly(globals.ALIGN_TYPE.SHOP, 3)
+	for i in range(3):
+		globals.draw_shop.emit()
+		await get_tree().create_timer(.1 / globals.play_speed).timeout
 
 
 
@@ -98,8 +102,20 @@ func _process(delta):
 	
 func _ready():
 	globals.draw_card.connect(_on_draw_card)
+	globals.draw_shop.connect(_on_draw_shop)
 	globals.init_align_randomly(globals.ALIGN_TYPE.FULL_DECK)
-	start_level()
+	for e in scoring_objects:
+		e.visible = false
+	draw_button.disabled = true
+	go_button.disabled = true
+	globals.card_rules = []
+	globals.add_rule(globals.CARD_TYPE.X_OF_KIND)
+	globals.add_rule(globals.CARD_TYPE.FLUSH)
+	globals.add_rule(globals.CARD_TYPE.STRAIGHT)
+	globals.add_rule(globals.CARD_TYPE.ANY)
+	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
+	draw_deck.disabled = true
+	discard_deck.disabled = true
 	
 
 
@@ -108,7 +124,11 @@ func _on_next_button_button_up():
 
 func _on_draw_card():
 	globals.init_align_randomly(globals.ALIGN_TYPE.HELD_CARDS, 1,false, true)
-	audio_manager.play_sound(audio_manager.SOUNDS.CARD)
+	audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
+
+func _on_draw_shop():
+	globals.init_align_randomly(globals.ALIGN_TYPE.SHOP, 1,false, true)
+	audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
 
 func _on_timer_timeout():
 	globals.is_computing_score = false
@@ -197,3 +217,8 @@ func _on_draw_button_button_up():
 			await get_tree().create_timer(.1 / globals.play_speed).timeout
 			nb_to_draw -= 1
 		globals.nb_draw_left -= 1
+
+
+func _on_play_button_button_up() -> void:
+	title_box.visible = false
+	start_level()

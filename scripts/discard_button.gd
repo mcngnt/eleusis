@@ -8,7 +8,7 @@ var element_hovers = false
 func _ready():
 	#add_theme_stylebox_override("hover", get_theme_stylebox("normal"))
 	##add_theme_stylebox_override("pressed", get_theme_stylebox("normal"))
-	#add_theme_stylebox_override("disabled", get_theme_stylebox("normal"))
+	add_theme_stylebox_override("disabled", get_theme_stylebox("normal"))
 	add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	none_tex = get_theme_stylebox("hover").texture
 	
@@ -35,6 +35,7 @@ func _input(event):
 		globals.update_content_align.emit(globals.ALIGN_TYPE.HELD_CARDS)
 		$"../../../..".remove_child(globals.held_element)
 		globals.held_element = null
+		audio_manager.play_sound(audio_manager.SOUNDS.DISCARD)
 		
 		
 		

@@ -16,6 +16,7 @@ signal element_held
 signal update_content_align(align_type)
 signal changed_score(new_score)
 signal draw_card
+signal draw_shop
 
 signal create_droplet(pos, delay)
 signal move_droplet(target_pos, delay)
