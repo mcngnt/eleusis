@@ -53,13 +53,17 @@ func init_attributes(r, c):
 
 
 
-func trigger():
+func trigger(create_rule):
 	match type:
 		globals.CARD_TYPE.BASIC:
-			return
-	globals.add_rule(type)
-	#globals.rules.append(type)
-	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
+			pass
+		globals.CARD_TYPE.GOLDEN_TICKET:
+			globals.money += 50
+			await globals.launch_effect(self,globals.money, "m", -1, globals.get_card_title(type))
+		_:
+			if create_rule:
+				globals.add_rule(type)
+				globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
 
 
 func play_card_tween():
@@ -74,9 +78,44 @@ func sample_randomly():
 	color = globals.CARD_COLOR.values()[randi() % (globals.CARD_COLOR.size())]
 	match type:
 		globals.CARD_TYPE.RED_FLAG:
-			color = globals.CARD_COLOR.RED
+			color = 0
+			rank = 6
 		globals.CARD_TYPE.BLACK_SWAN:
-			color = globals.CARD_COLOR.BLACK
+			color = 1
+			rank = 6
+		globals.CARD_TYPE.STRAIGHT:
+			color = 1
+			rank = 8
+		globals.CARD_TYPE.X_OF_KIND:
+			color = 0
+			rank = 2
+		globals.CARD_TYPE.FLUSH:
+			color = 0
+			rank = 5
+		globals.CARD_TYPE.ANY:
+			color = 1
+			rank = 1
+		globals.CARD_TYPE.PAR:
+			color = 0
+			rank = 4
+		globals.CARD_TYPE.CRESUS:
+			color = 0
+			rank = 7
+		globals.CARD_TYPE.TALKING_HEAD:
+			color = 1
+			rank = 11
+		globals.CARD_TYPE.PAREIDOLIA:
+			color = 1
+			rank = 13
+		globals.CARD_TYPE.FIBONACCI:
+			color = 0
+			rank = 3
+		globals.CARD_TYPE.GOLDEN_TICKET:
+			color = 1
+			rank = 5
+		globals.CARD_TYPE.UNITY:
+			color = 1
+			rank = 1
 	price = randi() % 10 + 30
 
 

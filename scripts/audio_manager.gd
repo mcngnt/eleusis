@@ -2,7 +2,7 @@ extends Node2D
 
 enum SOUNDS {ACCEPT, CARD, GET_COIN, INCOMING_COIN, SCORING, DISCARD, SCORE}
 
-const MAX_PITCH = 2.5
+const MAX_PITCH = 2
 
 func _ready():
 	for s in SOUNDS.values():

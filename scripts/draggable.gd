@@ -31,10 +31,17 @@ func _ready():
 		align_zone.try_add_element(parent)
 
 
+func sound_buying():
+	var amount = 4
+	for i in range(4):
+		audio_manager.play_sound(audio_manager.SOUNDS.INCOMING_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
+		await get_tree().create_timer(.02 / globals.play_speed).timeout
+
 func _input(event):
 	if is_paid && mouse_hovered && event.is_action("drag") && event.is_released():
 		if parent.price <= globals.money:
 			globals.money -= parent.price
+			sound_buying()
 			is_frozen = false
 			is_paid = false
 			align_zone.erase_element(parent)

@@ -1,17 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://b6jtspwmwvlas"]
+[gd_scene load_steps=8 format=3 uid="uid://b6jtspwmwvlas"]
 
 [ext_resource type="Script" path="res://scripts/score_effect.gd" id="1_u2jyp"]
 [ext_resource type="FontFile" uid="uid://o3nnytpjlt04" path="res://fonts/Gothica-Bold.ttf" id="2_1ufxw"]
 [ext_resource type="Shader" path="res://shader/upscale.gdshader" id="2_uhrjo"]
 [ext_resource type="Texture2D" uid="uid://dvyixblru65ip" path="res://sprites/rectangle.png" id="4_vwd5n"]
 [ext_resource type="Texture2D" uid="uid://bnje80j4rktue" path="res://sprites/circle.png" id="5_n38ul"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_cumna"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_87r1a"]
-font = ExtResource("2_1ufxw")
-font_size = 300
-font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y37uo"]
 shader = ExtResource("2_uhrjo")
@@ -25,27 +18,9 @@ shader_parameter/AA_SCALE = 41.0
 shader_parameter/LINE_THICKNESS = 0.366
 shader_parameter/modulate = Color(1, 0.756863, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_oxkh5"]
-font = ExtResource("2_1ufxw")
-font_size = 300
-font_color = Color(0, 0, 0, 1)
-
 [node name="score_effect" type="Node2D"]
 z_index = 50
 script = ExtResource("1_u2jyp")
-
-[node name="bonus_label" type="Label" parent="."]
-material = SubResource("ShaderMaterial_cumna")
-offset_left = -232.0
-offset_top = -172.0
-offset_right = 240.0
-offset_bottom = 195.0
-scale = Vector2(0.1, 0.1)
-pivot_offset = Vector2(230, 170)
-text = "+10"
-label_settings = SubResource("LabelSettings_87r1a")
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="Rectangle" type="Sprite2D" parent="."]
 z_index = -1
@@ -61,17 +36,30 @@ position = Vector2(0, -1)
 scale = Vector2(3, 3)
 texture = ExtResource("5_n38ul")
 
-[node name="effect_label" type="Label" parent="."]
-offset_left = -679.0
-offset_top = -155.0
-offset_right = 695.0
-offset_bottom = 212.0
-rotation = 6.28319
-scale = Vector2(0.1, 0.1)
-pivot_offset = Vector2(675, 183)
-size_flags_horizontal = 4
-text = "5 of a kind"
-label_settings = SubResource("LabelSettings_oxkh5")
-horizontal_alignment = 1
-vertical_alignment = 1
-metadata/_edit_use_anchors_ = true
+[node name="bonus_label" type="RichTextLabel" parent="."]
+offset_left = -336.0
+offset_top = -62.0
+offset_right = 335.0
+offset_bottom = 61.0
+scale = Vector2(0.3, 0.3)
+pivot_offset = Vector2(335, 61)
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("2_1ufxw")
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "[center]+10"
+fit_content = true
+
+[node name="effect_label" type="RichTextLabel" parent="."]
+offset_left = -417.0
+offset_top = -32.0
+offset_right = 417.0
+offset_bottom = 91.0
+scale = Vector2(0.3, 0.3)
+pivot_offset = Vector2(417, 61)
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("2_1ufxw")
+theme_override_font_sizes/normal_font_size = 100
+bbcode_enabled = true
+text = "[center]5 of a kind"
+fit_content = true

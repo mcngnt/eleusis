@@ -2,15 +2,15 @@ extends Node
 
 enum DRAG_TYPE {NONE, CARD, ARTIFACT}
 enum ALIGN_TYPE {NONE, ARTIFACTS, HELD_CARDS, SHOP, FULL_DECK, PLAYED_CARDS, DISCARD_DECK, CARD_RULES}
-enum COMBO_TYPE {ANY, X_OF_KIND, FLUSH, STRAIGHT}
+enum COMBO_TYPE {ANY, X_OF_KIND, FLUSH, STRAIGHT, FIBONACCI}
 enum COMBO_MODE {ADD, MULT}
 
-enum CARD_TYPE {NONE, BASIC, ANY, X_OF_KIND, FLUSH, STRAIGHT, RED_FLAG, BLACK_SWAN}
+enum CARD_TYPE {NONE, BASIC, ANY, X_OF_KIND, FLUSH, STRAIGHT, RED_FLAG, BLACK_SWAN, PAR, CRESUS, TALKING_HEAD, PAREIDOLIA, FIBONACCI, GOLDEN_TICKET, UNITY}
 enum CARD_RANK {ZERO,ACE,TWO,THREE, FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,TEN,JACK,QUEEN,KING}
 enum CARD_COLOR {RED,BLACK}
 
 #Minimum number of cards, Base score, Combo mode
-var combo_stats = {COMBO_TYPE.ANY : [],COMBO_TYPE.X_OF_KIND : [2, 20, COMBO_MODE.MULT], COMBO_TYPE.FLUSH : [3, 10, COMBO_MODE.ADD], COMBO_TYPE.STRAIGHT : [2, 20, COMBO_MODE.ADD]}
+var combo_stats = {COMBO_TYPE.ANY : [],COMBO_TYPE.X_OF_KIND : [2, 20, COMBO_MODE.MULT], COMBO_TYPE.FLUSH : [3, 10, COMBO_MODE.ADD], COMBO_TYPE.STRAIGHT : [2, 20, COMBO_MODE.ADD], COMBO_TYPE.FIBONACCI : [3,100, COMBO_MODE.MULT]}
 
 signal element_held
 signal update_content_align(align_type)
@@ -24,7 +24,7 @@ signal move_droplet(target_pos, delay)
 const CARD = preload("res://scenes/card.tscn")
 const SCORE_EFFECT = preload("res://scenes/score_effect.tscn")
 
-var score = 0
+var score : float = 0.
 
 var money = 0
 
@@ -56,6 +56,7 @@ var is_computing_score = false
 var current_element_hovered = null
 var current_scoring_card_id = 0
 var rules = []
+var starting_rules = [CARD_TYPE.ANY, CARD_TYPE.FLUSH, CARD_TYPE.X_OF_KIND, CARD_TYPE.STRAIGHT, CARD_TYPE.PAR, CARD_TYPE.UNITY]
 
 var card_tooltip_pos = Vector2()
 var is_card_tooltip_active = false
@@ -95,29 +96,49 @@ func get_card_path(type, rank = 0, color = 0):
 			return "res://sprites/cards/straight.png"
 		globals.CARD_TYPE.ANY:
 			return "res://sprites/cards/any.png"
-		_:
+		globals.CARD_TYPE.BASIC:
 			return "res://sprites/cards/%s_%s.png" % [str(rank), str(globals.CARD_COLOR.keys()[color]).to_lower()]
+		_:
+			return "res://sprites/cards/none.png"
+
+
 
 func get_combo_text(text):
 	return "[color=%s]" % combo_color.to_html() + text + "[/color]"
 
 func get_rule_desc(type):
 	var base = "none"
+	var is_rule = true
 	match type:
 		CARD_TYPE.X_OF_KIND:
-			base = "activates the " + get_combo_text("x of a kind combo") +  " (play cards with same rank)"
+			base = "activates the " + get_combo_text("x of a kind combo") +  " (cards with same rank)"
 		CARD_TYPE.ANY:
-			base = "activates the " + get_combo_text("any combo") +  " (score its value)"
+			base = "activates the " + get_combo_text("any combo") +  " (score card's value)"
 		CARD_TYPE.STRAIGHT:
-			base = "activates the " + get_combo_text("straight combo") +  " (play cards with increasing rank)"
+			base = "activates the " + get_combo_text("straight combo") +  " (cards with increasing rank)"
 		CARD_TYPE.FLUSH:
-			base = "activates the " + get_combo_text("flush combo") +  " (play cards with same color)"
+			base = "activates the " + get_combo_text("flush combo") +  " (cards with same color)"
 		CARD_TYPE.RED_FLAG:
 			base = "+20 if red card"
 		CARD_TYPE.BLACK_SWAN:
 			base = "1 in 5 chance for x5 if black card"
+		CARD_TYPE.PAR:
+			base = "x2 if card's rank is below 4 (or ace)"
+		CARD_TYPE.TALKING_HEAD:
+			base = "x2 if head"
+		CARD_TYPE.CRESUS:
+			base = "add money to score if 7"
+		CARD_TYPE.PAREIDOLIA:
+			base = "every card is considered as head"
+		CARD_TYPE.FIBONACCI:
+			base = "activates the " + get_combo_text("fibonacci combo") +  " (cards following the fibonacci sequence)"
+		CARD_TYPE.GOLDEN_TICKET:
+			base = "gain 40 coins"
+			is_rule = false
+		CARD_TYPE.UNITY:
+			base = "retriggers if ace"
 	#return "[font_size=150][outline_color=#000][outline_size=30][color=#787878]rule[/color][/outline_size][/outline_color][/font_size]" + " : " + base
-	return "[u]RULE[/u] : " + base
+	return ("[u]RULE[/u] : " if is_rule  else "[u]ON TRIGGER[/u] : ") + base
 
 func get_card_color_string(color):
 	match color:
@@ -141,28 +162,35 @@ func get_card_title(type):
 			return get_combo_text("X of a kind") + " card"
 		CARD_TYPE.FLUSH:
 			return get_combo_text("flush") + " card"
+		CARD_TYPE.FIBONACCI:
+			return get_combo_text("fibonacci") + " card"
 		_:
 			return CARD_TYPE.keys()[type].to_lower().replace("_", " ")
 
 
-func launch_effect(card, bonus, op, rule_id, is_combo=false, name = ""):
+func launch_effect(card, bonus, op, rule_id, name = "", is_combo=false):
 	var effect = SCORE_EFFECT.instantiate()
 	$"../game/CanvasLayer".add_child(effect)
 	effect.position = card.global_position + Vector2(0,-150)
 	if name == "":
-		name = get_card_title(card.type)
+		name = get_card_title(rules[rule_id])
 	effect.launch(bonus, op, name, is_combo)
-	card_rules[rule_id].play_card_tween()
+	if rule_id >= 0:
+		card_rules[rule_id].play_card_tween()
 	audio_manager.play_sound(audio_manager.SOUNDS.SCORE, current_effect_pitch)
 	current_effect_pitch += (audio_manager.MAX_PITCH - 1.) / NB_TRIGGER_MAX_PITCH
+	if current_effect_pitch > audio_manager.MAX_PITCH:
+		current_effect_pitch = lerp(1., float(audio_manager.MAX_PITCH), 0.7)
+	play_speed += .1
 	await card.play_card_tween().finished
 	
 func compute_combo(triggered_cards, combo, rule_id):
 	var card = triggered_cards[0]
 	var bonus = 0
-	var last_card = card
 	var count = 0
-	for prev_card in triggered_cards:
+	var last_card = card
+	for i in range(len(triggered_cards)):
+		var prev_card = triggered_cards[i]
 		match combo:
 			COMBO_TYPE.ANY:
 				bonus = card.get_value()
@@ -175,6 +203,9 @@ func compute_combo(triggered_cards, combo, rule_id):
 					break
 			COMBO_TYPE.STRAIGHT:
 				if prev_card != last_card && last_card.get_ordering() - 1 != prev_card.get_ordering():
+					break
+			COMBO_TYPE.FIBONACCI:
+				if i >= 2 && triggered_cards[i-2].rank - triggered_cards[i-1].rank != prev_card.rank:
 					break
 		count += 1
 		last_card = prev_card
@@ -194,16 +225,24 @@ func compute_combo(triggered_cards, combo, rule_id):
 				name = str(count) + " of a kind"
 			_:
 				name = COMBO_TYPE.keys()[combo].to_lower() + " " + str(count)
-		await launch_effect(card,bonus, "+", rule_id, true, name)
-			
+		await launch_effect(card,bonus, "+", rule_id,name, true)
+
+func is_card_head(rank):
+	return rank > 10 || CARD_TYPE.PAREIDOLIA in rules
+		
+
 func compute_score():
+	play_speed = 1
 	current_effect_pitch = 1.
 	current_scoring_card_id = 0
+	var current_nb_trigger = 0
+	var needed_nb_trigger = 0
 	var triggered_cards = []
 	while current_scoring_card_id < len(played_cards):
 		var card = played_cards[current_scoring_card_id]
-		triggered_cards.push_front(card)
-		card.trigger()
+		if current_nb_trigger == 0:
+			triggered_cards.push_front(card)
+		await card.trigger(current_nb_trigger == 0)
 		for i in range(len(rules)):
 			var card_type = rules[i]
 			match card_type:
@@ -215,6 +254,8 @@ func compute_score():
 					await compute_combo(triggered_cards, COMBO_TYPE.FLUSH, i)
 				CARD_TYPE.STRAIGHT:
 					await compute_combo(triggered_cards, COMBO_TYPE.STRAIGHT, i)
+				CARD_TYPE.FIBONACCI:
+					await compute_combo(triggered_cards, COMBO_TYPE.FIBONACCI, i)
 				CARD_TYPE.RED_FLAG:
 					if card.color == CARD_COLOR.RED:
 						score += 20
@@ -223,7 +264,36 @@ func compute_score():
 					if card.color == CARD_COLOR.BLACK && randi() % 5 == 0:
 						score *= 5
 						await launch_effect(card,5, "x", i)
-		current_scoring_card_id += 1
+				CARD_TYPE.PAR:
+					if card.rank <= 4:
+						score *= 2
+						await launch_effect(card,2, "x", i)
+				CARD_TYPE.TALKING_HEAD:
+					if is_card_head(card.rank):
+						score *= 2
+						await launch_effect(card,2, "x", i)
+				CARD_TYPE.CRESUS:
+					if card.rank == 7:
+						score += money
+						await launch_effect(card,money, "+", i)
+		
+		
+		if current_nb_trigger == 0:
+			needed_nb_trigger = 0
+			for rule in rules:
+				match rule:
+					CARD_TYPE.UNITY:
+						if card.rank == 1:
+							needed_nb_trigger += 1
+					_:
+						pass
+		
+		current_nb_trigger += 1
+		if current_nb_trigger > needed_nb_trigger:
+			current_scoring_card_id += 1
+			current_nb_trigger = 0
+	
+	play_speed = 1.5
 
 
 func delete_elements(align_type, sample_from=false):

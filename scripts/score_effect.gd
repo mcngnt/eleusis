@@ -21,8 +21,10 @@ func _ready():
 	circle.visible = false
 
 func launch(bonus_value = 0, operator = "+", effect_name = "none", is_combo = false):
-	bonus_label.text = operator + str(bonus_value)
-	effect_label.text = effect_name
+	bonus_label.text = "[center]" + operator + str(bonus_value)
+	if operator == "m":
+		bonus_label.text = "[center]" + "+%s[img=120]res://sprites//coin.png[/img]" % str(bonus_value)
+	effect_label.text = "[center]" + effect_name
 	
 	if operator == "+":
 		circle.material.set_shader_parameter("modulate", plus_color)

@@ -19,6 +19,7 @@ extends Node2D
 
 @export var draw_button : Button
 @export var go_button : Button
+@export var discard_button : Button
 
 
 @export var center_money_rect : Control
@@ -49,15 +50,14 @@ func start_level():
 	for c in globals.card_rules:
 		$"../CanvasLayer".remove_child(c)
 	globals.card_rules = []
-	globals.add_rule(globals.CARD_TYPE.X_OF_KIND)
-	globals.add_rule(globals.CARD_TYPE.FLUSH)
-	globals.add_rule(globals.CARD_TYPE.STRAIGHT)
-	globals.add_rule(globals.CARD_TYPE.ANY)
+	for rule in globals.starting_rules:
+		globals.add_rule(rule)
 	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
 	for e in scoring_objects:
 		e.visible = true
 	draw_button.disabled = false
 	go_button.disabled = false
+	discard_button.visible = true
 	shop_box.visible = false
 	globals.delete_elements(globals.ALIGN_TYPE.SHOP)
 	globals.nb_draw_left = globals.start_nb_draws
@@ -69,6 +69,7 @@ func end_level():
 		e.visible = false
 	draw_button.disabled = true
 	go_button.disabled = true
+	discard_button.visible = false
 	shop_box.visible = true
 	globals.delete_elements(globals.ALIGN_TYPE.PLAYED_CARDS, true)
 	globals.delete_elements(globals.ALIGN_TYPE.DISCARD_DECK, true)
@@ -83,7 +84,10 @@ func end_level():
 	#score_label.text = "Score : " + str(new_score)
 
 func _process(delta):
-	score_label.text =  str(globals.score)
+	var s = str(globals.score)
+	if globals.score > 1e6:
+		s = s[0] + "." + s[1] + s[2] + "e" + str(len(s) - 1)
+	score_label.text =  s
 	money_label.text = "[center][font_size=300]%s[img=375]res://sprites//coin.png[/img]" % str(globals.money)
 	card_tape_nb_left_label.text = str(globals.max_nb_tape - len(globals.played_cards))
 	draw_nb_left_label.text = str(globals.nb_draw_left)
@@ -113,12 +117,12 @@ func _ready():
 		e.visible = false
 	draw_button.disabled = true
 	go_button.disabled = true
+	discard_button.visible = false
 	globals.card_rules = []
-	globals.add_rule(globals.CARD_TYPE.X_OF_KIND)
-	globals.add_rule(globals.CARD_TYPE.FLUSH)
-	globals.add_rule(globals.CARD_TYPE.STRAIGHT)
-	globals.add_rule(globals.CARD_TYPE.ANY)
+	for rule in globals.starting_rules:
+		globals.add_rule(rule)
 	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
+	title_box.visible = true
 	draw_deck.disabled = true
 	discard_deck.disabled = true
 	
@@ -188,6 +192,7 @@ func _on_draw_deck_button_up():
 		$"../CanvasLayer".add_child(card)
 		card.position = draw_deck.global_position
 	globals.update_content_align.emit(globals.ALIGN_TYPE.FULL_DECK)
+	audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
 
 func _input(event):
 	if event is InputEventMouseButton && globals.showing_deck:
@@ -196,6 +201,7 @@ func _input(event):
 		globals.showing_deck = false
 		for card in globals.full_deck:
 			$"../CanvasLayer".remove_child(card)
+		audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
 	
 	if event is InputEventMouseButton && globals.showing_discard:
 		await get_tree().create_timer(.1).timeout
@@ -203,6 +209,7 @@ func _input(event):
 		globals.showing_discard = false
 		for card in globals.discard_deck:
 			$"../CanvasLayer".remove_child(card)
+		audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
 
 
 func _on_discard_deck_button_up():
@@ -212,6 +219,7 @@ func _on_discard_deck_button_up():
 		$"../CanvasLayer".add_child(card)
 		card.position = discard_deck.global_position
 	globals.update_content_align.emit(globals.ALIGN_TYPE.DISCARD_DECK)
+	audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
 
 
 func _on_draw_button_button_up():
@@ -227,3 +235,17 @@ func _on_draw_button_button_up():
 func _on_play_button_button_up() -> void:
 	title_box.visible = false
 	start_level()
+
+
+func _on_discard_button_button_up():
+	while len(globals.held_cards) > 0:
+		var card = globals.held_cards[0]
+		globals.held_cards.erase(card)
+		globals.discard_deck.append(card)
+		$"../CanvasLayer".remove_child(card)
+		globals.update_content_align.emit(globals.ALIGN_TYPE.HELD_CARDS)
+		globals.update_content_align.emit(globals.ALIGN_TYPE.DISCARD_DECK)
+		audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
+		audio_manager.play_sound(audio_manager.SOUNDS.DISCARD)
+		await get_tree().create_timer(.1 / globals.play_speed).timeout
+	

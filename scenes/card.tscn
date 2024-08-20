@@ -57,9 +57,6 @@ animations = [{
 [node name="card" type="Node2D"]
 scale = Vector2(0.1, 0.1)
 script = ExtResource("1_4umdn")
-type = null
-rank = null
-color = null
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 1

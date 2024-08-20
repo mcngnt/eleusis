@@ -1,4 +1,4 @@
-[gd_scene load_steps=64 format=3 uid="uid://b227st38dku6j"]
+[gd_scene load_steps=79 format=3 uid="uid://b227st38dku6j"]
 
 [ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
 [ext_resource type="Texture2D" uid="uid://b0myg3u4bowmk" path="res://sprites/tank.png" id="2_1jguu"]
@@ -20,11 +20,16 @@
 [ext_resource type="Texture2D" uid="uid://dax5s47r73lxp" path="res://sprites/next_button1.png" id="13_7c065"]
 [ext_resource type="Texture2D" uid="uid://clamce15ewwk5" path="res://sprites/disabled_button_draw.png" id="13_8ohb0"]
 [ext_resource type="Texture2D" uid="uid://cwybvxi7dmf7" path="res://sprites/cards/none.png" id="13_vsn4v"]
+[ext_resource type="Texture2D" uid="uid://dl5hlqleiqq0t" path="res://sprites/draw_button1.png" id="13_w1206"]
+[ext_resource type="Texture2D" uid="uid://bbe7onjd1rxwy" path="res://sprites/draw_button2.png" id="14_r7t2r"]
 [ext_resource type="Script" path="res://scripts/discard_button.gd" id="14_x7l65"]
 [ext_resource type="Texture2D" uid="uid://d2ektg5ebvo5n" path="res://sprites/disabled_button_go.png" id="16_boxul"]
 [ext_resource type="Script" path="res://scripts/droplet_manager.gd" id="16_y2x85"]
 [ext_resource type="Texture2D" uid="uid://fackjpq1x5eq" path="res://sprites/cards/discard_select.png" id="17_e6fwh"]
+[ext_resource type="Texture2D" uid="uid://lulrfjttuwjq" path="res://sprites/disabled_button.png" id="23_2eneb"]
 [ext_resource type="PackedScene" uid="uid://b3f32mom3insm" path="res://scenes/card_tooltip.tscn" id="24_87mv0"]
+[ext_resource type="Texture2D" uid="uid://bpu6bon05si4x" path="res://sprites/play_button1.png" id="24_reoae"]
+[ext_resource type="Texture2D" uid="uid://tgfdt20agmk2" path="res://sprites/play_button2.png" id="25_nytkw"]
 [ext_resource type="Texture2D" uid="uid://dthjmfl5jgnds" path="res://sprites/indic.png" id="27_nk6dh"]
 [ext_resource type="AudioStream" uid="uid://c8cmcir33bjuq" path="res://sounds/scoring.wav" id="27_vv8wf"]
 
@@ -87,6 +92,24 @@ shader_parameter/modulate = Color(0, 0, 0, 1)
 [sub_resource type="LabelSettings" id="LabelSettings_huc0g"]
 font = ExtResource("11_08k7c")
 font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3vopx"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h20jt"]
+texture = ExtResource("23_2eneb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_aue0n"]
+texture = ExtResource("13_w1206")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ygmf1"]
+texture = ExtResource("14_r7t2r")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_3du1k"]
+texture = ExtResource("13_w1206")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ont60"]
 shader = ExtResource("10_78bjs")
@@ -198,6 +221,24 @@ shader_parameter/AA_SCALE = 41.0
 shader_parameter/LINE_THICKNESS = 0.366
 shader_parameter/modulate = Color(1, 1, 1, 1)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2y14y"]
+shader = ExtResource("10_78bjs")
+shader_parameter/AA_SCALE = 41.0
+shader_parameter/LINE_THICKNESS = 0.366
+shader_parameter/modulate = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_kntem"]
+texture = ExtResource("23_2eneb")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e32ka"]
+texture = ExtResource("24_reoae")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y3151"]
+texture = ExtResource("25_nytkw")
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_4kssy"]
+texture = ExtResource("24_reoae")
+
 [node name="game" type="Node2D"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -284,7 +325,7 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.2, 0.2)
 size_flags_vertical = 3
-text = "12345"
+text = "1000000000"
 label_settings = SubResource("LabelSettings_qvnyb")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -426,7 +467,18 @@ vertical_alignment = 1
 [node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 8
+
+[node name="discard_button" type="Button" parent="CanvasLayer/main/HBoxContainer3/VBoxContainer3"]
+material = SubResource("ShaderMaterial_3vopx")
+custom_minimum_size = Vector2(150, 75)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 6
+theme_override_styles/disabled = SubResource("StyleBoxTexture_h20jt")
+theme_override_styles/hover = SubResource("StyleBoxTexture_aue0n")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_ygmf1")
+theme_override_styles/normal = SubResource("StyleBoxTexture_3du1k")
+script = ExtResource("7_xkse6")
 
 [node name="VBoxContainer2" type="VBoxContainer" parent="CanvasLayer/main/HBoxContainer3"]
 layout_mode = 2
@@ -664,6 +716,7 @@ scale = Vector2(1.5, 1.5)
 texture = ExtResource("27_nk6dh")
 
 [node name="title" type="VBoxContainer" parent="CanvasLayer"]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -691,10 +744,16 @@ layout_mode = 2
 size_flags_vertical = 3
 
 [node name="play_button" type="Button" parent="CanvasLayer/title/HBoxContainer3"]
+material = SubResource("ShaderMaterial_2y14y")
 custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 size_flags_horizontal = 6
 size_flags_vertical = 4
+theme_override_styles/disabled = SubResource("StyleBoxTexture_kntem")
+theme_override_styles/hover = SubResource("StyleBoxTexture_e32ka")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_y3151")
+theme_override_styles/normal = SubResource("StyleBoxTexture_4kssy")
+script = ExtResource("7_xkse6")
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/title"]
 layout_mode = 2
@@ -704,17 +763,17 @@ size_flags_vertical = 3
 script = ExtResource("16_y2x85")
 
 [node name="card_tooltip" parent="CanvasLayer" instance=ExtResource("24_87mv0")]
-offset_left = -594.0
-offset_top = -348.0
-offset_right = 656.0
-offset_bottom = 420.0
+offset_left = -1212.0
+offset_top = -377.0
+offset_right = 38.0
+offset_bottom = 391.0
 scale = Vector2(0.15, 0.15)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(4, 4)
 script = ExtResource("1_suu85")
 
-[node name="logic" parent="." node_paths=PackedStringArray("title_box", "score_label", "money_label", "shop_box", "draw_deck_align", "discard_deck_align", "scoring_objects", "draw_deck", "discard_deck", "draw_button", "go_button", "center_money_rect", "draw_nb_left_label", "card_tape_nb_left_label", "tooltip_panel", "indic", "coin_zone") instance=ExtResource("9_ka8u0")]
+[node name="logic" parent="." node_paths=PackedStringArray("title_box", "score_label", "money_label", "shop_box", "draw_deck_align", "discard_deck_align", "scoring_objects", "draw_deck", "discard_deck", "draw_button", "go_button", "discard_button", "center_money_rect", "draw_nb_left_label", "card_tape_nb_left_label", "tooltip_panel", "indic", "coin_zone") instance=ExtResource("9_ka8u0")]
 z_index = -10
 scale = Vector2(2, 2)
 title_box = NodePath("../CanvasLayer/title")
@@ -728,6 +787,7 @@ draw_deck = NodePath("../CanvasLayer/main/HBoxContainer4/VBoxContainer/draw_deck
 discard_deck = NodePath("../CanvasLayer/main/HBoxContainer4/VBoxContainer2/discard_deck")
 draw_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button")
 go_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button")
+discard_button = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer3/discard_button")
 center_money_rect = NodePath("../CanvasLayer/main/HBoxContainer/VBoxContainer3/water_tank_texrect/center_money_rect")
 draw_nb_left_label = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button/Label")
 card_tape_nb_left_label = NodePath("../CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button/Label")
@@ -743,6 +803,7 @@ one_shot = true
 stream = ExtResource("27_vv8wf")
 
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button" to="logic" method="_on_draw_button_button_up"]
+[connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer3/discard_button" to="logic" method="_on_discard_button_button_up"]
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer2/end_turn_button" to="logic" method="_on_end_turn_button_button_up"]
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer4/VBoxContainer/draw_deck" to="logic" method="_on_draw_deck_button_up"]
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer4/VBoxContainer2/discard_deck" to="logic" method="_on_discard_deck_button_up"]
