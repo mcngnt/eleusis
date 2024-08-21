@@ -1,10 +1,9 @@
-[gd_scene load_steps=15 format=3 uid="uid://bi6ogr5dpnpcs"]
+[gd_scene load_steps=13 format=3 uid="uid://bi6ogr5dpnpcs"]
 
 [ext_resource type="Script" path="res://scripts/card.gd" id="1_4umdn"]
 [ext_resource type="PackedScene" uid="uid://b3intptexv4c7" path="res://scenes/draggable.tscn" id="3_8xf1p"]
 [ext_resource type="Texture2D" uid="uid://dkqiuw02o55w6" path="res://sprites/cards/12_red.png" id="3_spuhq"]
 [ext_resource type="Shader" path="res://shader/upscale.gdshader" id="5_aaimd"]
-[ext_resource type="FontFile" uid="uid://l4v32s4eh8u2" path="res://fonts/alagard.ttf" id="5_h0c0a"]
 [ext_resource type="Texture2D" uid="uid://ch10368ioagaj" path="res://sprites/select1.png" id="7_pnq2l"]
 [ext_resource type="Texture2D" uid="uid://4m7gmx8883lx" path="res://sprites/select2.png" id="8_ml01d"]
 
@@ -24,15 +23,11 @@ shader_parameter/modulate = Color(0, 0, 0, 0.376471)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lhh8d"]
 size = Vector2(760, 1055)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_r4n4u"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4jwy6"]
 shader = ExtResource("5_aaimd")
 shader_parameter/AA_SCALE = 41.0
 shader_parameter/LINE_THICKNESS = 0.366
 shader_parameter/modulate = Color(1, 1, 1, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_e52rf"]
-font = ExtResource("5_h0c0a")
-outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_awo7d"]
 shader = ExtResource("5_aaimd")
@@ -55,7 +50,7 @@ animations = [{
 }]
 
 [node name="card" type="Node2D"]
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.11, 0.11)
 script = ExtResource("1_4umdn")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -77,17 +72,16 @@ drag_type = 1
 position = Vector2(-5.48363e-05, 2.50004)
 shape = SubResource("RectangleShape2D_lhh8d")
 
-[node name="price_label" type="Label" parent="."]
-material = SubResource("ShaderMaterial_r4n4u")
-offset_left = -270.0
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+material = SubResource("ShaderMaterial_4jwy6")
+offset_left = -350.0
 offset_top = 580.0
-offset_right = -216.0
-offset_bottom = 595.0
-scale = Vector2(10, 10)
-text = "100 UOL"
-label_settings = SubResource("LabelSettings_e52rf")
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_right = 350.0
+offset_bottom = 853.0
+bbcode_enabled = true
+text = "[center][font_size=200
+]30[img=200]res://sprites//coin.png[/img]"
+fit_content = true
 
 [node name="select" type="AnimatedSprite2D" parent="."]
 visible = false

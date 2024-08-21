@@ -16,6 +16,7 @@ corner_radius_bottom_right = 50
 corner_radius_bottom_left = 50
 
 [node name="Panel" type="Panel"]
+z_index = 800
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5

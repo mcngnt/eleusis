@@ -17,6 +17,7 @@ func _ready():
 	add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	
 func _on_button_up():
+	audio_manager.play_sound(audio_manager.SOUNDS.INCOMING_COIN, 1., 5)
 	mode = HOVERED
 
 func _on_button_down():

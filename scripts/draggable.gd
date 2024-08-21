@@ -35,7 +35,7 @@ func sound_buying():
 	var amount = 4
 	for i in range(4):
 		audio_manager.play_sound(audio_manager.SOUNDS.INCOMING_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
-		await get_tree().create_timer(.02 / globals.play_speed).timeout
+		await get_tree().create_timer(.02 / globals.user_play_speed).timeout
 
 func _input(event):
 	if is_paid && mouse_hovered && event.is_action("drag") && event.is_released():
@@ -84,8 +84,9 @@ func _on_mouse_exited():
 	mouse_hovered = false
 
 func _process(delta):
-	if mouse_hovered && (globals.current_element_hovered == null || abs(globals.current_element_hovered.global_position.x - 40 - get_viewport().get_mouse_position().x) > abs(global_position.x - get_viewport().get_mouse_position().x)):
+	if mouse_hovered && (globals.current_element_hovered == null || abs(globals.current_element_hovered.global_position.x - get_viewport().get_mouse_position().x) > abs(global_position.x - get_viewport().get_mouse_position().x)):
 		globals.current_element_hovered = self
+	
 	
 	if !dragging:
 		parent.position = (target_position + parent.position)/2.0

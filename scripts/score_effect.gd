@@ -24,6 +24,12 @@ func launch(bonus_value = 0, operator = "+", effect_name = "none", is_combo = fa
 	bonus_label.text = "[center]" + operator + str(bonus_value)
 	if operator == "m":
 		bonus_label.text = "[center]" + "+%s[img=120]res://sprites//coin.png[/img]" % str(bonus_value)
+	if operator == "r":
+		bonus_label.text = "[center]REPEAT !"
+	if operator == "a":
+		bonus_label.text = "[center]AGAIN !"
+	if operator == "c":
+		bonus_label.text = "[center]COPY !"
 	effect_label.text = "[center]" + effect_name
 	
 	if operator == "+":
@@ -40,6 +46,12 @@ func launch(bonus_value = 0, operator = "+", effect_name = "none", is_combo = fa
 	effect_label.visible = true
 	rectangle.visible = true
 	circle.visible = true
+	
+	if globals.play_speed > 40:
+		await get_tree().create_timer(1. / globals.play_speed).timeout
+		queue_free()
+		return
+	
 	var bonus_label_vec = bonus_label.scale
 	var effect_label_vec = effect_label.scale
 	var rectangle_vec = rectangle.scale
@@ -49,9 +61,9 @@ func launch(bonus_value = 0, operator = "+", effect_name = "none", is_combo = fa
 	rectangle.scale = Vector2()
 	circle.scale = Vector2()
 	
-	var start_delay = 0.35 / globals.play_speed
-	var middle_delay = 0.3 / globals.play_speed
-	var end_delay = 0.35 / globals.play_speed
+	var start_delay = 0.3 / globals.play_speed
+	var middle_delay = 0.4 / globals.play_speed
+	var end_delay = 0.3 / globals.play_speed
 	
 	
 	var tween = get_tree().create_tween()

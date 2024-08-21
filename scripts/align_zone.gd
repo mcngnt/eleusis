@@ -41,6 +41,8 @@ func get_global_elements():
 			return globals.discard_deck
 		globals.ALIGN_TYPE.CARD_RULES:
 			return globals.card_rules
+		globals.ALIGN_TYPE.DELETE_CARDS:
+			return globals.delete_cards
 		_:
 			return null
 
@@ -59,6 +61,8 @@ func _ready():
 		globals.ALIGN_TYPE.DISCARD_DECK:
 			accepted_drag_type = [globals.DRAG_TYPE.CARD]
 		globals.ALIGN_TYPE.CARD_RULES:
+			accepted_drag_type = [globals.DRAG_TYPE.CARD]
+		globals.ALIGN_TYPE.DELETE_CARDS:
 			accepted_drag_type = [globals.DRAG_TYPE.CARD]
 		_:
 			pass
@@ -159,6 +163,10 @@ func arrange_elements():
 
 func try_add_element(e):
 	if !(e in elements):
+		if align_type == globals.ALIGN_TYPE.DELETE_CARDS:
+			globals.money -= 30
+			globals.delete_card.emit(e)
+			audio_manager.play_sound(audio_manager.SOUNDS.DISCARD)
 		var i = get_closest_anchor_id(e, get_anchor_points(len(elements) + 1))
 		e.draggable.is_frozen = is_frozen
 		elements.insert(i, e)
@@ -168,6 +176,20 @@ func try_add_element(e):
 
 
 func _process(delta):
+	if align_type == globals.ALIGN_TYPE.PLAYED_CARDS:
+		max_nb = globals.max_nb_tape
+		best_items_number = globals.max_nb_tape
+		if len(preview_sprites) != max_nb:
+			for s in preview_sprites:
+				remove_child(s)
+			preview_sprites = []
+			for i in range(best_items_number):
+				var s = Sprite2D.new()
+				s.texture = tex_preview
+				s.z_index = 1
+				s.scale = Vector2(1.7,1.7)
+				add_child(s)
+				preview_sprites.append(s)
 	if align_type == globals.ALIGN_TYPE.FULL_DECK && !globals.showing_deck:
 		pass
 	else:
@@ -184,6 +206,8 @@ func _process(delta):
 
 func _on_mouse_entered():
 	if globals.is_element_held && globals.held_element.draggable.drag_type in accepted_drag_type && len(elements) < max_nb && !is_closed:
+		if align_type == globals.ALIGN_TYPE.DELETE_CARDS && globals.money < 30:
+			return
 		globals.held_element.draggable.align_zone = self
 
 func erase_element(e):
