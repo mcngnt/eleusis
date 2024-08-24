@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://e5rgg20yf731"]
+
+[sub_resource type="Curve" id="Curve_5pslr"]
+_data = [Vector2(0.0128205, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="score_particle" type="CPUParticles2D"]
+emitting = false
+amount = 30
+one_shot = true
+speed_scale = 5.0
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 40.0
+initial_velocity_max = 40.0
+scale_amount_curve = SubResource("Curve_5pslr")

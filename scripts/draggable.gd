@@ -40,7 +40,7 @@ func sound_buying():
 func _input(event):
 	if is_paid && mouse_hovered && event.is_action("drag") && event.is_released():
 		if parent.price <= globals.money:
-			globals.money -= parent.price
+			globals.change_money.emit(-parent.price, parent)
 			sound_buying()
 			is_frozen = false
 			is_paid = false
@@ -55,7 +55,7 @@ func _input(event):
 	if is_frozen:
 		return
 	if event.is_action("drag"):
-		if event.is_pressed() && mouse_hovered && !globals.is_element_held:
+		if event.is_pressed() && mouse_hovered && !globals.is_element_held && self == globals.current_element_hovered:
 			dragging = true
 			parent.z_index = 1000
 			globals.held_element = parent
@@ -84,16 +84,20 @@ func _on_mouse_exited():
 	mouse_hovered = false
 
 func _process(delta):
+	#mouse_hovered = get_child(0).shape.get_global_rect().has_point(get_viewport().get_mouse_position())
+	
+	if global_position.distance_to(get_viewport().get_mouse_position()) > 200:
+		mouse_hovered = false
+	
 	if mouse_hovered && (globals.current_element_hovered == null || abs(globals.current_element_hovered.global_position.x - get_viewport().get_mouse_position().x) > abs(global_position.x - get_viewport().get_mouse_position().x)):
 		globals.current_element_hovered = self
-	
 	
 	if !dragging:
 		parent.position = (target_position + parent.position)/2.0
 		if mouse_hovered && self == globals.current_element_hovered:
-			parent.position = (target_position + Vector2(0,-20) + parent.position)/2.0
+			parent.position = lerp(target_position + Vector2(0,-80), parent.position, 0.9)
 		else:
-			parent.position = (target_position + Vector2(0,sin(Time.get_ticks_msec() * 0.002 + number * 1.) * 5) + parent.position)/2.0
+			parent.position = lerp(target_position + Vector2(0,sin(Time.get_ticks_msec() * 0.002 + number * 1.) * 20), parent.position, 0.9)
 	else:
 		target_position = position
 	

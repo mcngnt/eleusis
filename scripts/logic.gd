@@ -1,18 +1,11 @@
 extends Node2D
 
-@export var title_box : VBoxContainer
-
 @export var score_label : Label
 @export var money_label : RichTextLabel
-
-@export var shop_box : HBoxContainer
 
 @export var draw_deck_align : Panel
 @export var discard_deck_align : Panel
 
-@onready var timer = $Timer
-
-@export var scoring_objects : Array[Control]
 
 @export var draw_deck : Button
 @export var discard_deck : Button
@@ -36,6 +29,14 @@ extends Node2D
 
 @export var round_label : Label
 
+@export var tape_panel : Panel
+@export var shop_panels : HBoxContainer
+@export var next_button : Button
+
+@export var title_label : RichTextLabel
+@export var title_elements : Array[Control]
+
+
 func init_hand():
 	globals.delete_elements(globals.ALIGN_TYPE.HELD_CARDS, true)
 	#globals.init_align_randomly(globals.ALIGN_TYPE.HELD_CARDS, globals.start_held_card_nb, true, true)
@@ -47,52 +48,75 @@ func init_hand():
 	#for card in globals.held_cards:
 		#print(card.draggable.align_zone.align_type)
 
+func init_rules():
+	for rule in globals.starting_rules:
+		globals.add_rule(rule)
+		audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
+		await get_tree().create_timer(.1 / globals.user_play_speed).timeout
+		globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
+
 func start_level():
+	tape_panel.visible = true
+	var start_tape_position = tape_panel.position
+	tape_panel.position = Vector2(-1600,start_tape_position.y)
+	var tween = get_tree().create_tween()
+	tween.tween_property(tape_panel, "position", start_tape_position, 0.5 / globals.user_play_speed).set_trans(Tween.TRANS_EXPO)
+	
+	next_button.visible = false
+	var start_shop_position = shop_panels.position
+	tween = get_tree().create_tween()
+	tween.tween_property(shop_panels, "position", Vector2(600,start_shop_position.y), 0.5 / globals.user_play_speed).set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(shop_panels, "visible", false, 0.)
+	tween.tween_property(shop_panels, "position", start_shop_position, 0.)
+	tween.tween_callback(globals.delete_elements.bind(globals.ALIGN_TYPE.SHOP))
+	
+	
 	draw_deck.disabled = false
 	discard_deck.disabled = false
 	globals.rules = []
 	for c in globals.card_rules:
 		$"../CanvasLayer".remove_child(c)
 	globals.card_rules = []
-	for rule in globals.starting_rules:
-		globals.add_rule(rule)
-	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
-	for e in scoring_objects:
-		e.visible = true
+	init_rules()
 	draw_button.disabled = false
 	go_button.disabled = false
 	discard_button.visible = true
-	shop_box.visible = false
-	globals.delete_elements(globals.ALIGN_TYPE.SHOP)
 	globals.nb_draw_left = globals.start_nb_draws
 	init_hand()
 	globals.level_id += 1
 
 func end_level():
-	for e in scoring_objects:
-		e.visible = false
+	var start_tape_position = tape_panel.position
+	var tween = get_tree().create_tween()
+	tween.tween_property(tape_panel, "position", Vector2(600,start_tape_position.y), 0.5 / globals.user_play_speed).set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(tape_panel, "visible", false, 0.)
+	tween.tween_property(tape_panel, "position", start_tape_position, 0.)
+	tween.tween_callback(globals.delete_elements.bind(true).bind(globals.ALIGN_TYPE.PLAYED_CARDS))
+	
+	shop_panels.visible = true
+	next_button.visible = true
+	var start_shop_position = shop_panels.position
+	shop_panels.position = Vector2(-1800,start_shop_position.y)
+	tween = get_tree().create_tween()
+	tween.tween_property(shop_panels, "position", start_shop_position, 0.5 / globals.user_play_speed).set_trans(Tween.TRANS_EXPO)
+	
 	draw_button.disabled = true
 	go_button.disabled = true
 	discard_button.visible = false
-	shop_box.visible = true
-	globals.delete_elements(globals.ALIGN_TYPE.PLAYED_CARDS, true)
 	globals.delete_elements(globals.ALIGN_TYPE.DISCARD_DECK, true)
-	#globals.init_align_randomly(globals.ALIGN_TYPE.SHOP, 3)
 	for i in range(5):
 		globals.draw_shop.emit()
 		await get_tree().create_timer(.1 / globals.user_play_speed).timeout
+	
 
-
-
-#func _on_change_score(new_score):
-	#score_label.text = "Score : " + str(new_score)
 
 func _process(delta):
-	#print(type_string(typeof(globals.score)))
-	#print(sizeof(globals.score))
-	#globals.score += 10
-	#globals.score *= 1.1
-	#print(globals.score)
+	if globals.current_element_hovered != null && !globals.current_element_hovered.mouse_hovered:
+		globals.current_element_hovered = null
+		
+	if globals.current_element_hovered == null:
+		globals.is_card_tooltip_active = false
+	
 	if globals.score > 1e10:
 		globals.score_mantissa += 5
 		globals.score /= 1e5
@@ -100,9 +124,10 @@ func _process(delta):
 	if globals.score > 1e6 || globals.score_mantissa > 0:
 		s = str(globals.score).split(".")[0]
 		s = s[0] + "." + s[1] + s[2] + "e" + str(len(s) - 1 + globals.score_mantissa)
-	#var s = str(globals.score)
 	score_label.text =  s
-	money_label.text = "[center][font_size=300]%s[img=375]res://sprites//coin.png[/img]" % str(globals.money)
+	
+	
+	money_label.text = "[wave amp=200 freq=2 connected=0][center][font_size=300]%s[img=375]res://sprites//coin.png[/img]" % str(globals.money)
 	round_label.text = "ROUND\n" + str(globals.level_id)
 	card_tape_nb_left_label.text = str(globals.max_nb_tape - len(globals.played_cards))
 	draw_nb_left_label.text = str(globals.nb_draw_left)
@@ -128,21 +153,25 @@ func _process(delta):
 func _ready():
 	globals.draw_card.connect(_on_draw_card)
 	globals.draw_shop.connect(_on_draw_shop)
+	globals.score_tween.connect(_on_score_tween)
 	globals.instanciate_card.connect(_on_instanciate_card)
 	globals.delete_card.connect(_on_delete_card)
+	globals.change_money.connect(_on_change_money)
 	globals.init_align_randomly(globals.ALIGN_TYPE.FULL_DECK)
-	for e in scoring_objects:
-		e.visible = false
+	tape_panel.visible = false
 	draw_button.disabled = true
 	go_button.disabled = true
 	discard_button.visible = false
+	shop_panels.visible = false
 	globals.card_rules = []
 	for rule in globals.starting_rules:
 		globals.add_rule(rule)
 	globals.update_content_align.emit(globals.ALIGN_TYPE.CARD_RULES)
-	title_box.visible = true
 	draw_deck.disabled = true
 	discard_deck.disabled = true
+	title_label.visible = true
+	for el in title_elements:
+		el.visible = true
 	
 func _on_instanciate_card(c):
 	$"../CanvasLayer".add_child(c)
@@ -158,22 +187,25 @@ func _on_draw_shop():
 	globals.init_align_randomly(globals.ALIGN_TYPE.SHOP, 1,false, false)
 	audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
 
-func _on_timer_timeout():
-	globals.is_computing_score = false
-	end_level()
 
 func add_money(delay, amount=1):
 	await get_tree().create_timer(delay).timeout
 	globals.money += amount
 
 func get_money(pos, amount, radius):
+	var mult = 1
+	if amount > 300:
+		mult = amount / 300
+	amount /= mult
 	for i in range(amount):
 		globals.create_droplet.emit(pos + radius * randf() * Vector2.from_angle(randf() * 2. * PI), .8)
 		await get_tree().create_timer(5. / (float(amount) * float(amount) * globals.user_play_speed)).timeout
 		audio_manager.play_sound(audio_manager.SOUNDS.INCOMING_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
+	if amount > 0:
+		await get_tree().create_timer(.5 / globals.user_play_speed).timeout
 	for i in range(amount):
 		globals.move_droplet.emit(center_money_rect.global_position + center_money_rect.size /2,.8, true)
-		add_money(.3 / globals.user_play_speed, randi() % 3 + 3)
+		add_money(.8, (randi() % 3 + 3) * mult)
 		await get_tree().create_timer(5. / (float(amount) * float(amount) * globals.user_play_speed)).timeout
 		audio_manager.play_sound(audio_manager.SOUNDS.GET_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
 
@@ -183,23 +215,8 @@ func _on_end_turn_button_button_up():
 	await globals.compute_score()
 	await get_money(get_viewport_rect().size/2, globals.nb_activation, 100)
 	globals.play_speed = globals.user_play_speed
-	timer.start()
-
-
-#func _on_discard_button_button_up():
-	#var nb_dis = 0
-	#for card in globals.held_cards.duplicate():
-		#if card.draggable.is_selected:
-			#nb_dis += 1
-			#card.draggable.is_selected = false
-			#globals.held_cards.erase(card)
-			#globals.update_content_align.emit(globals.ALIGN_TYPE.HELD_CARDS)
-			#$"../CanvasLayer".remove_child(card)
-			#globals.discard_deck.append(card)
-	#for i in range(nb_dis):
-		#globals.draw_card.emit()
-			#
-
+	globals.is_computing_score = false
+	end_level()
 
 
 func _on_draw_deck_button_up():
@@ -250,7 +267,13 @@ func _on_draw_button_button_up():
 
 
 func _on_play_button_button_up() -> void:
-	title_box.visible = false
+	for el in title_elements:
+		el.visible = false
+	var start_title_position = title_label.position
+	var tween = get_tree().create_tween()
+	tween.tween_property(title_label, "position", Vector2(start_title_position.x,-500), 0.4 / globals.user_play_speed).set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(title_label, "visible", false, 0.)
+	tween.tween_property(title_label, "position", start_title_position, 0.)
 	start_level()
 
 
@@ -270,3 +293,32 @@ func _on_discard_button_button_up():
 
 func _on_delete_card(c):
 	$"../CanvasLayer".remove_child(c)
+
+
+func _on_score_tween():
+	var tween = get_tree().create_tween()
+	tween.tween_property(score_label, "scale", score_label.scale*1.5, 0.3 / globals.play_speed).set_trans(Tween.TRANS_EXPO)
+	tween.tween_property(score_label, "scale", score_label.scale, 0.3 / globals.play_speed).set_trans(Tween.TRANS_EXPO)
+
+
+func _on_change_money(amount, obj):
+	await get_tree().create_timer(.1 / (globals.user_play_speed)).timeout
+	if amount < 0:
+		add_money(.0, abs(amount - (amount/3)*3) * sign(amount))
+	for i in range(abs(amount)/3):
+		if amount < 0:
+			add_money(.0, 3 * sign(amount))
+		if amount >= 0:
+			globals.create_droplet.emit(obj.position, .0)
+		else:
+			globals.create_droplet.emit(center_money_rect.global_position + center_money_rect.size /2, .0)
+		if amount < 0:
+			globals.move_droplet.emit(obj.position, .8, true)
+		else:
+			globals.move_droplet.emit(center_money_rect.global_position + center_money_rect.size /2, .8, true)
+		if amount >= 0:
+			add_money(.8, 3 * sign(amount))
+		await get_tree().create_timer(5. / (float(amount) * float(amount) * globals.user_play_speed)).timeout
+		audio_manager.play_sound(audio_manager.SOUNDS.INCOMING_COIN, float(i)/float(amount) * audio_manager.MAX_PITCH)
+	if amount >= 0:
+		add_money(.8, abs(amount - (amount/3)*3) * sign(amount))

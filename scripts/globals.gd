@@ -24,13 +24,16 @@ signal move_droplet(target_pos, delay)
 signal instanciate_card(c)
 signal delete_card(c)
 
+signal score_tween
+signal change_money(amount, obj)
+
 const CARD = preload("res://scenes/card.tscn")
 const SCORE_EFFECT = preload("res://scenes/score_effect.tscn")
 
 var score : float = 0.
 var score_mantissa : int = 0
 
-var money = 1000
+var money = 0
 
 var held_cards = []
 var shop = []
@@ -78,6 +81,14 @@ var combo_color = Color.html("#dd47ff")
 var nb_activation = 0
 
 
+func score_add(bonus):
+	score += bonus
+	score_tween.emit()
+
+func score_mult(bonus):
+	score *= bonus
+	score_tween.emit()
+
 func is_rank_equal(card, rank):
 	if card.is_rank_joker:
 		return true
@@ -101,6 +112,7 @@ func add_rule(type, base_card = null):
 	var c = CARD.instantiate()
 	c.type = type
 	c.scale = Vector2(0.065, 0.065)
+	c.position = Vector2(750, -100)
 	$"../game/CanvasLayer".add_child(c)
 	card_rules.append(c)
 	if base_card != null:
@@ -168,13 +180,13 @@ func get_rule_desc(type):
 		CARD_TYPE.BLANK_CARD:
 			return "[u]INFO[/u] : joker can be any rank"
 		CARD_TYPE.ENCODING:
-			return "every card is considered as a digit"
+			base =  "every card is considered as a digit"
 		CARD_TYPE.BOULDER:
-			return "+100 if 3"
+			base =  "+100 if 3"
 		CARD_TYPE.PAY_TO_WIN:
-			return "retrigger every digit, pay 5 coins per trigger"
+			base =  "retrigger every digit, pay 5 coins per trigger"
 		CARD_TYPE.INUMERATE:
-			base = "1 in 10 chance to retrigger"
+			base = "1 in 5 chance to retrigger at every trigger"
 		CARD_TYPE.THE_RIPPER:
 			base = "x4 if jack"
 		CARD_TYPE.POLYCEPHALY:
@@ -262,7 +274,7 @@ func compute_combo(triggered_cards, combo, rule_id):
 			COMBO_MODE.MULT:
 				bonus = combo_stats[combo][1] * 2 ** (count - combo_stats[combo][0])
 	if bonus > 0 || combo == COMBO_TYPE.ANY:
-		score += bonus
+		score_add(bonus)
 		var name = "none"
 		match combo:
 			COMBO_TYPE.ANY:
@@ -287,7 +299,6 @@ func compute_score(nb_restart = 0):
 	current_scoring_card_id = 0
 	current_rule_card_id = 0
 	var current_nb_trigger = 0
-	var needed_nb_trigger = 0
 	var retrigger_cards_id = []
 	var triggered_cards = []
 	while current_scoring_card_id < len(played_cards):
@@ -316,27 +327,27 @@ func compute_score(nb_restart = 0):
 					await compute_combo(triggered_cards, COMBO_TYPE.FIBONACCI, i)
 				CARD_TYPE.RED_FLAG:
 					if card.color == CARD_COLOR.RED:
-						score += 20
+						score_add(20)
 						await launch_effect(card,20, "+", i)
 				CARD_TYPE.BLACK_SWAN:
 					if card.color == CARD_COLOR.BLACK && randi() % 5 == 0:
-						score *= 5
+						score_mult(5)
 						await launch_effect(card,5, "x", i)
 				CARD_TYPE.PAR:
 					if is_rank_greater(card,4):
-						score *= 2
+						score_mult(2)
 						await launch_effect(card,2, "x", i)
 				CARD_TYPE.TALKING_HEAD:
 					if is_card_head(card):
-						score *= 2
+						score_mult(2)
 						await launch_effect(card,2, "x", i)
 				CARD_TYPE.CRESUS:
 					if is_rank_equal(card,7):
-						score += money
+						score_add(money)
 						await launch_effect(card,money, "+", i)
 				CARD_TYPE.BOULDER:
 					if is_rank_equal(card,3):
-						score += 100
+						score_add(100)
 						await launch_effect(card,100, "+", i)
 				CARD_TYPE.ARMY:
 					if is_rank_equal(card,8):
@@ -344,49 +355,49 @@ func compute_score(nb_restart = 0):
 						play_speed = old_play_speed * 2
 						for held_card in held_cards:
 							if is_card_digit(held_card):
-								score *= 1.5
+								score_mult(1.5)
 								held_card.play_card_tween()
 								await launch_effect(card,1.5, "x", i)
 						play_speed = old_play_speed
 				CARD_TYPE.THE_RIPPER:
 					if is_rank_equal(card, 11):
-						score *= 4
+						score_mult(4)
 						await launch_effect(card,4, "x", i)
 					
 		
 		
 		if current_nb_trigger == 0:
 			retrigger_cards_id = []
-			needed_nb_trigger = 0
+			var nb_pay_to_win = 1
 			for i in range(len(rules)):
 				match rules[i]:
 					CARD_TYPE.UNITY:
 						if is_rank_equal(card,1):
-							needed_nb_trigger += 1
 							retrigger_cards_id.append(i)
 					CARD_TYPE.PAY_TO_WIN:
-						if is_card_digit(card) && globals.money >= 10:
-							needed_nb_trigger += 1
-							retrigger_cards_id.append(i)
-					CARD_TYPE.INUMERATE:
-						if randi() % 10 == 0:
-							needed_nb_trigger += 1
+						if is_card_digit(card) && globals.money >= 10 * nb_pay_to_win:
+							nb_pay_to_win += 1
 							retrigger_cards_id.append(i)
 					CARD_TYPE.POLYCEPHALY:
 						if is_card_head(card):
-							needed_nb_trigger += 1
 							retrigger_cards_id.append(i)
 					_:
 						pass
 		
+		for i in range(len(rules)):
+			if rules[i] == CARD_TYPE.INUMERATE && randi() % 5 == 0:
+				retrigger_cards_id.push_front(i)
+				break
+		
 		current_nb_trigger += 1
-		if current_nb_trigger > needed_nb_trigger:
+		if len(retrigger_cards_id) == 0:
 			current_scoring_card_id += 1
 			current_nb_trigger = 0
 		else:
-			if rules[retrigger_cards_id[current_nb_trigger - 1]] == CARD_TYPE.PAY_TO_WIN:
-				globals.money -= 10
-			await launch_effect(card, 0, "a", retrigger_cards_id[current_nb_trigger - 1])
+			var card_trigger_id = retrigger_cards_id.pop_front()
+			if rules[card_trigger_id] == CARD_TYPE.PAY_TO_WIN:
+				change_money.emit(-10, card_rules[card_trigger_id])
+			await launch_effect(card, 0, "a", card_trigger_id)
 	
 	var nb_restart_needed = 0
 	var restarting_cards_id = []

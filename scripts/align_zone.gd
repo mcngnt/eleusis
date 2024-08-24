@@ -164,8 +164,9 @@ func arrange_elements():
 func try_add_element(e):
 	if !(e in elements):
 		if align_type == globals.ALIGN_TYPE.DELETE_CARDS:
-			globals.money -= 30
+			globals.change_money.emit(-30, e)
 			globals.delete_card.emit(e)
+			e.position = global_position + size/2
 			audio_manager.play_sound(audio_manager.SOUNDS.DISCARD)
 		var i = get_closest_anchor_id(e, get_anchor_points(len(elements) + 1))
 		e.draggable.is_frozen = is_frozen
@@ -177,6 +178,7 @@ func try_add_element(e):
 
 func _process(delta):
 	if align_type == globals.ALIGN_TYPE.PLAYED_CARDS:
+		is_closed = globals.is_computing_score
 		max_nb = globals.max_nb_tape
 		best_items_number = globals.max_nb_tape
 		if len(preview_sprites) != max_nb:

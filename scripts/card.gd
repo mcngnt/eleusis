@@ -11,6 +11,7 @@ extends Node2D
 @onready var top_panel_pos = $top_panel_pos
 @onready var bot_panel_pos = $bot_panel_pos
 
+@onready var score_particle = $score_particle
 
 
 const drag_type = globals.DRAG_TYPE.CARD
@@ -23,7 +24,6 @@ var base_scale : Vector2
 @export var color = globals.CARD_COLOR.RED
 @export var is_color_joker = false
 @export var is_rank_joker = false
-
 
 var price = 5
 
@@ -62,7 +62,8 @@ func trigger(create_rule, left_neighbour):
 		globals.CARD_TYPE.BASIC:
 			pass
 		globals.CARD_TYPE.GOLDEN_TICKET:
-			globals.money += 50
+			globals.change_money.emit(50, self)
+			
 			await globals.launch_effect(self,50, "m", -1, globals.get_card_title(type))
 		globals.CARD_TYPE.GROWTH_HORMONE:
 			globals.max_nb_tape += 1
@@ -88,6 +89,7 @@ func trigger(create_rule, left_neighbour):
 
 
 func play_card_tween():
+	score_particle.emitting = true
 	if globals.play_speed > 40:
 		self.scale *= 1.5
 		await get_tree().create_timer(1. / globals.play_speed).timeout
@@ -95,7 +97,12 @@ func play_card_tween():
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "scale", self.scale*1.5, 0.5 / globals.play_speed).set_trans(Tween.TRANS_EXPO)
 	tween.tween_property(self, "scale", self.scale, 0.5 / globals.play_speed).set_trans(Tween.TRANS_EXPO)
+	
+	
 	await get_tree().create_timer(1. / globals.play_speed).timeout
+	
+	
+	
 
 func sample_randomly(card_type=globals.CARD_TYPE.NONE):
 	if card_type == globals.CARD_TYPE.NONE:
@@ -183,26 +190,6 @@ func sample_randomly(card_type=globals.CARD_TYPE.NONE):
 	price = randi() % 10 + 30
 
 
-#func get_wisp_text(text = "wisp"):
-	#var base_tag = ["[wave amp=100 freq=4]", "[/wave]"]
-	#var color_tag = ["",""]
-	#match wisp_color:
-		#globals.WISP_COLOR.BICHROMATIC:
-			#color_tag = ["[gradient span=0.1]", "[/gradient]"]
-		#_:
-			#color_tag = ["[color=%s]" % globals.WISP_SCREEN_COLOR[wisp_color].to_html(), "[/color]"]
-	#
-	#var size_tag = ["", ""]
-	#match wisp_weight:
-		#globals.WISP_WEIGHT.LIGHTWEIGHT:
-			#size_tag = ["[font_size=80]", "[/font_size]"]
-		#globals.WISP_WEIGHT.HEAVY:
-			#size_tag = ["[font_size=250]", "[/font_size]"]
-		#_:
-			#pass
-	#
-	#return base_tag[0] + color_tag[0] + size_tag[0] + text + size_tag[1] + color_tag[1] + base_tag[1] + "\n\n"
-
 func get_header_text():
 	return "[font_size=120][center][outline_size=100][outline_color=#000]"
 
@@ -214,9 +201,6 @@ func _ready():
 	sprite_2d.texture = load(path)
 	shadow.texture = load(path)
 	base_scale = scale
-	#top_panel.get_child(0).text = globals.get_rule_desc(type)
-	
-
 
 func _process(delta):
 	rich_text_label.visible = draggable.is_paid
