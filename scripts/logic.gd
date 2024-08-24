@@ -244,6 +244,9 @@ func _input(event):
 		for card in globals.discard_deck:
 			$"../CanvasLayer".remove_child(card)
 		audio_manager.play_sound(audio_manager.SOUNDS.CARD, 1., -10)
+	
+	if event.is_action_pressed("ui_cancel"):
+		get_tree().quit()
 
 
 func _on_discard_deck_button_up():

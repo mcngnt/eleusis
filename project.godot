@@ -13,7 +13,8 @@ config_version=5
 config/name="eleusis"
 run/main_scene="res://scenes/game.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://icon.svg"
+boot_splash/show_image=false
+config/icon="res://sprites/cards/pareidolia.png"
 
 [autoload]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://b227st38dku6j"]
+[gd_scene load_steps=85 format=3 uid="uid://b227st38dku6j"]
 
 [ext_resource type="Script" path="res://scripts/camera.gd" id="1_suu85"]
 [ext_resource type="Texture2D" uid="uid://b0myg3u4bowmk" path="res://sprites/tank.png" id="2_1jguu"]
@@ -31,7 +31,6 @@
 [ext_resource type="Texture2D" uid="uid://bpu6bon05si4x" path="res://sprites/play_button1.png" id="24_reoae"]
 [ext_resource type="Texture2D" uid="uid://tgfdt20agmk2" path="res://sprites/play_button2.png" id="25_nytkw"]
 [ext_resource type="Texture2D" uid="uid://dthjmfl5jgnds" path="res://sprites/indic.png" id="27_nk6dh"]
-[ext_resource type="AudioStream" uid="uid://c8cmcir33bjuq" path="res://sounds/scoring.wav" id="27_vv8wf"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ey4v4"]
 shader = ExtResource("10_78bjs")
@@ -871,11 +870,11 @@ material = SubResource("ShaderMaterial_kx3o4")
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = -52.0
+offset_top = -36.0
 offset_bottom = 50.0
 grow_horizontal = 2
 bbcode_enabled = true
-text = "[center][color=red][font_size=30] 30[img=50]res://sprites//coin.png[/img]"
+text = "[center][color=red][font_size=25] 30[img=30]res://sprites//coin.png[/img]"
 fit_content = true
 
 [node name="VBoxContainer3" type="VBoxContainer" parent="CanvasLayer/shop_box/VBoxContainer3/Control/HBoxContainer3"]
@@ -1098,13 +1097,6 @@ shop_panels = NodePath("../CanvasLayer/shop_box/VBoxContainer3/Control/HBoxConta
 next_button = NodePath("../CanvasLayer/shop_box/VBoxContainer3/HBoxContainer2/next_button")
 title_label = NodePath("../CanvasLayer/title/HBoxContainer2/Control/RichTextLabel")
 title_elements = [NodePath("../CanvasLayer/title/HBoxContainer3/play_button"), NodePath("../CanvasLayer/title/HBoxContainer4/Label")]
-
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("27_vv8wf")
-
-[node name="bg" type="Sprite2D" parent="."]
-scale = Vector2(1.5, 1.5)
-texture = ExtResource("5_1rrg5")
 
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer/draw_button" to="logic" method="_on_draw_button_button_up"]
 [connection signal="button_up" from="CanvasLayer/main/HBoxContainer3/VBoxContainer3/discard_button" to="logic" method="_on_discard_button_button_up"]
